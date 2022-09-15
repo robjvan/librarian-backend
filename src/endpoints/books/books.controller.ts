@@ -16,6 +16,19 @@ export class BooksController {
   @Get(':id')
   @Bind(Param('id', new ParamTypeIdPipe()))
   async findAll(id: any, @Req() req: any): Promise<any[]> {
-    return await this.booksService.findAll(id);
+    return [`400 OK. [id] = ${id}`];
+    // return await this.booksService.findAll(id);
   }
+
+  /// Get all books 
+
+  /// GET all books for a given user id
+  
+  /// GET a book by given id
+  
+  /// PATCH to update a book by given id
+
+  /// DELETE a book by given id
+
+  /// Find books with queryParams
 }
