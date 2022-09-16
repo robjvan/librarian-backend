@@ -41,8 +41,8 @@ console.log('Preparing app');
 async function bootstrap() {
   console.log('Memory Limit (MB): ', process.env.GAE_MEMORY_MB);
 
-  const config: IConfig = await initializeConfig();
-  const server = express();
+  // const config: IConfig = await initializeConfig();
+  // const server = express();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule
   //   , {
@@ -66,17 +66,17 @@ async function bootstrap() {
   //   })
   // );
   // app.use(bodyParser.json({ verify: rawBodyBuffer, limit: "500kb" }));
-  app.use((req, res, next) => {
-    res.set("Cache-Control", "no-store");
-    res.set("Pragma", "no-cache");
-    res.set("Allow-Origin-With-Credentials", true);
-    next();
-  });
-  app.set("trust proxy", true);
+  // app.use((req, res, next) => {
+  //   res.set("Cache-Control", "no-store");
+  //   res.set("Pragma", "no-cache");
+  //   res.set("Allow-Origin-With-Credentials", true);
+  //   next();
+  // });
+  // app.set("trust proxy", true);
 
   // app.useGlobalFilters(new OwnershipExceptionFilter());
 
-  await app.init();
+  // await app.init();
   // http.createServer(server).listen(config.httpPort || 3000);
   console.log("Server initialized and waiting for requests");
 
