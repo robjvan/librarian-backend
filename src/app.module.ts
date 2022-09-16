@@ -7,11 +7,15 @@ import { MiddlewareConsumer, RouteInfo } from '@nestjs/common/interfaces';
 
 import * as rateLimit from 'express-rate-limit';
 import { BooksService } from './endpoints/books/books.service';
+import { UserService } from './endpoints/user/user.service';
 
 @Module({
   imports: [],
-  controllers: [BooksController, UserController],
-  providers: [BooksService],
+  controllers: [ BooksController, UserController],
+  providers: [
+    BooksService,
+    UserService
+  ],
 })
 export class AppModule {
   private readonly _limitedRoutes: RouteInfo[] = [

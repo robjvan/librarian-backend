@@ -28,4 +28,16 @@ export class BooksController {
   async findAll(id: any, @Req() req: any) {
     return await this.booksService.findOneById(id);
   }
+
+  /// Get all books 
+
+  /// GET all books for a given user id
+  
+  /// GET a book by given id
+  
+  /// PATCH to update a book by given id
+
+  /// DELETE a book by given id
+
+  /// Find books with queryParams
 }
