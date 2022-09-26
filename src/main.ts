@@ -5,6 +5,8 @@ import { AppModule } from './app.module';
 import { initializeConfig } from './config/config';
 import { IConfig } from './config/config.interface';
 import http = require("http");
+import { librarianDataSource } from './data.source';
+import { ParamTypeIdPipe } from './pipes/param.type.id.pipe';
 
 console.log('Preparing app');
 
@@ -54,6 +56,16 @@ async function bootstrap() {
   //   logger: console,
   // }
   );
+  app.useGlobalPipes(new ParamTypeIdPipe());
+
+  librarianDataSource
+    .initialize()
+    .then(() => {
+      console.log('Data source has been initialized');
+    })
+    .catch((err) => {
+      console.error('Error initializing data source', err);
+    });
 
 
   // app.use(helmet());
@@ -80,6 +92,6 @@ async function bootstrap() {
   // http.createServer(server).listen(config.httpPort || 3000);
   console.log("Server initialized and waiting for requests");
 
-  await app.listen(3000);
+  await app.listen(process.env.SERVER_PORT);
 }
 bootstrap();
