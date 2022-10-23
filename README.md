@@ -1,73 +1,54 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Librarian Backend
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Required Functionality
 
-## Description
+### User functionality
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Users can sign up with email/Google/Apple
+- User can only see the books from their library
+- User can sign out
 
-## Installation
+### Library functionality
 
-```bash
-$ npm install
-```
+- User can add books to library via barcode, search, or manual entry (single/multiple)
+- User can delete books from library (single/multiple)
+- User can sort books by various fields, ie - author, title, publishYear
+- User can update book details
+- User can mark book as favorite (single/multiple)
+- User can mark book as read (single/multiple)
+- User can upload photo of custom book cover  
+- User can filter books by various criteria, ie - unread, faves, et al
 
-## Running the app
+### List functionality
 
-```bash
-# development
-$ npm run start
+- User library will have pre-built "lists", ie - Favorites, Shopping List, Wish List
+- User can create/delete custom lists
+- User can add/remove books to lists (single/multiple)
+- User can print lists? ie - shopping list, all books  *<-- Front-end feature?*
 
-# watch mode
-$ npm run start:dev
+# Local Development
 
-# production mode
-$ npm run start:prod
-```
+## Setting up Node
 
-## Test
+This project was built with and supports Node version 16.17.1
 
-```bash
-# unit tests
-$ npm run test
+### **Installing Node version manager (Mac/Linux)**
 
-# e2e tests
-$ npm run test:e2e
+Use nvm to easily install and switch different node versions.  Go to [https://github.com/nvm-sh/nvm#install--update-script](https://github.com/nvm-sh/nvm#install--update-script) to get the latest install script.
 
-# test coverage
-$ npm run test:cov
-```
+The install command for the current release as of writing this document is:  
+> `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
 
-## Support
+### **Installing Node version manager (Windows)**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Head to [https://github.com/coreybutler/nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases) to download and install the latest release.
 
-## Stay in touch
+### **Common nvm commands**
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Install node version: `nvm install 16.17.1`
+- Switch node version: `nvm use 16.17.1`
+- Switch to default version: `nvm use node`
 
-## License
-
-Nest is [MIT licensed](LICENSE).
+## Postman Configuration
+Postman is the easiest way to test the API during development.  Download from [https://www.postman.com/](https://www.postman.com/)
