@@ -8,15 +8,10 @@ import { BooksService } from './books.service';
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
-  // @Get()
-  // respond() {
-  //   console.log('/api/books OK')
-  //   return '/api/books OK'
-  // }
-
   /// GET all books for a given user id
   @Get()
   async getAllBooksForUser(
+    @Body() userId: string,
     @Query() searchTerm: string,
   ): Promise<Book[]> {
     // if (Object.keys(filterDto).length) {
