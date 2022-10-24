@@ -1,20 +1,18 @@
 import { Module } from '@nestjs/common';
 // import { AppController } from './app.controller';
 // import { AppService } from './app.service';
-import { BooksController } from './endpoints/books/books.controller';
 import { UserController } from './endpoints/user/user.controller';
 import { MiddlewareConsumer, RouteInfo } from '@nestjs/common/interfaces';
 
 import * as rateLimit from 'express-rate-limit';
-import { BooksService } from './endpoints/books/books.service';
 import { UserService } from './endpoints/user/user.service';
+import { AuthModule } from './endpoints/auth/auth.module';
 
 @Module({
-  imports: [],
-  controllers: [ BooksController, UserController],
+  imports: [AuthModule],
+  controllers: [ UserController],
   providers: [
-    BooksService,
-    UserService
+    UserService,
   ],
 })
 export class AppModule {

@@ -1,12 +1,9 @@
-import { Exclude } from "class-transformer";
 import { Column, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Author } from "./author.entity";
-import { Publisher } from "./publisher.entity";
 import { User } from "./user.entity";
 
 export class Book {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   title: string;
@@ -18,15 +15,14 @@ export class Book {
   pageCount: number;
 
   @Column()
-  authors: Author[];
+  authorID: number;
 
   @Column()
-  publishers: Publisher[];
+  publisherID: number;
 
   @Column()
   publishYear: string;
   
-  @ManyToOne((_type) => User, (user) => user.books, { eager: false }) /// eager means we will automatically fetch the tasks 
-  @Exclude({ toPlainOnly: true, })
-  user: User;
+  @ManyToOne((_type) => User) /// eager means we will automatically fetch the tasks 
+  userID: number;
 }

@@ -2,8 +2,9 @@ import { Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "./book.entity";
 
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  @OneToMany(_type => Book, book => book.userID, { eager: true }) /// eager means we will automatically fetch the tasks 
+  id: number;
 
   @Column()
   email: string;
@@ -18,8 +19,5 @@ export class User {
   profilePicUrl: string;
   
   @Column()
-  emailConfimed: boolean;  
-  
-  @OneToMany(_type => Book, book => book.user, { eager: true }) /// eager means we will automatically fetch the tasks 
-  books: number[]
+  emailConfimed: boolean;
 }

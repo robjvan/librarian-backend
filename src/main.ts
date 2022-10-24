@@ -1,12 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import express = require("express");
 import { AppModule } from './app.module';
-import { initializeConfig } from './config/config';
-import { IConfig } from './config/config.interface';
-import http = require("http");
 import { librarianDataSource } from './data.source';
-import { ParamTypeIdPipe } from './pipes/param.type.id.pipe';
+import { ValidationPipe } from '@nestjs/common';
 
 console.log('Preparing app');
 
@@ -46,17 +42,18 @@ async function bootstrap() {
   // const config: IConfig = await initializeConfig();
   // const server = express();
 
-  const app = await NestFactory.create<NestExpressApplication>(AppModule
-  //   , {
-  //   cors: {
-  //     origin: corsBuilder(config.corsOrigin, true),
-  //     credentials: true,
-  //   },
-  //   bodyParser: false,
-  //   logger: console,
-  // }
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    //   , {
+    //   cors: {
+    //     origin: corsBuilder(config.corsOrigin, true),
+    //     credentials: true,
+    //   },
+    //   bodyParser: false,
+    //   logger: console,
+    // }
   );
-  app.useGlobalPipes(new ParamTypeIdPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   librarianDataSource
     .initialize()
@@ -66,7 +63,6 @@ async function bootstrap() {
     .catch((err) => {
       console.error('Error initializing data source', err);
     });
-
 
   // app.use(helmet());
   // app.use(cookieParser());
@@ -90,7 +86,7 @@ async function bootstrap() {
 
   // await app.init();
   // http.createServer(server).listen(config.httpPort || 3000);
-  console.log("Server initialized and waiting for requests");
+  console.log('Server initialized and waiting for requests');
 
   await app.listen(process.env.SERVER_PORT);
 }
