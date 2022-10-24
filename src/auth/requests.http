@@ -1,0 +1,29 @@
+### Get All Users
+GET http://localhost:3000/api/user
+
+
+### Sign up a new user
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+  "username": "Dad",
+  "email": "dad@dad.com",
+  "password": "Asdf123!"
+}
+
+### Get user details by ID
+GET http://localhost:3000/api/user/1
+
+
+### Confirm email address
+Post http://localhost:3000/auth/confirmEmail
+Content-Type: application/json
+
+{
+  "email": "dad@dad.com"
+}
+
+
+### Delete User
+Delete http://localhost:3000/api/user/1
