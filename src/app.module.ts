@@ -1,19 +1,29 @@
 import { Module } from '@nestjs/common';
 // import { AppController } from './app.controller';
 // import { AppService } from './app.service';
-import { UserController } from './endpoints/user/user.controller';
+import { UserController } from './api/user/user.controller';
 import { MiddlewareConsumer, RouteInfo } from '@nestjs/common/interfaces';
 
 import * as rateLimit from 'express-rate-limit';
-import { UserService } from './endpoints/user/user.service';
-import { AuthModule } from './endpoints/auth/auth.module';
+import { UserService } from './api/user/user.service';
+import { AuthModule } from './auth/auth.module';
+import { getEnvPath } from './common/helper/env.helper';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm/dist';
+import { TypeOrmConfigService } from './shared/typeorm/typeorm.service';
+import { UserModule } from './api/user/user.module';
+
+const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
-  imports: [AuthModule],
-  controllers: [ UserController],
-  providers: [
-    UserService,
+  imports: [
+    ConfigModule.forRoot({ envFilePath, isGlobal: true }),
+    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+    AuthModule,
+    UserModule
   ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {
   private readonly _limitedRoutes: RouteInfo[] = [
