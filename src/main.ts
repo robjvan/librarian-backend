@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { librarianDataSource } from './data.source';
-import { ValidationPipe } from '@nestjs/common';
+// import { librarianDataSource } from './data.source';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 console.log('Preparing app');
 
@@ -37,12 +38,7 @@ console.log('Preparing app');
 // };
 
 async function bootstrap() {
-  console.log('Memory Limit (MB): ', process.env.GAE_MEMORY_MB);
-
-  // const config: IConfig = await initializeConfig();
-  // const server = express();
-
-  const app = await NestFactory.create<NestExpressApplication>(
+  const app: NestExpressApplication = await NestFactory.create(
     AppModule,
     //   , {
     //   cors: {
@@ -53,16 +49,12 @@ async function bootstrap() {
     //   logger: console,
     // }
   );
+  const config: ConfigService = app.get(ConfigService);
+  const port: number = config.get<number>('PORT');
+  // console.log('Memory Limit (MB): ', process.env.GAE_MEMORY_MB);
+
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  librarianDataSource
-    .initialize()
-    .then(() => {
-      console.log('Data source has been initialized');
-    })
-    .catch((err) => {
-      console.error('Error initializing data source', err);
-    });
 
   // app.use(helmet());
   // app.use(cookieParser());
@@ -86,8 +78,10 @@ async function bootstrap() {
 
   // await app.init();
   // http.createServer(server).listen(config.httpPort || 3000);
-  console.log('Server initialized and waiting for requests');
 
-  await app.listen(process.env.SERVER_PORT);
+  await app.listen(port, () => {
+    Logger.log(`Server initialized and waiting for requests`);
+    Logger.debug('[WEB]', config.get<string>('BASE_URL'));
+  });
 }
 bootstrap();
