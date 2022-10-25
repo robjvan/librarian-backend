@@ -1,0 +1,26 @@
+
+### Add new book to DB
+POST http://localhost:3000/api/books
+Content-Type: application/json
+
+{
+  "title": "",
+  "pages": 250,
+  "description": "",
+  "authorId": 1,
+  "publisherId": 1,
+  "publishYear": 2004,
+  "userId": 1
+}
+
+### Get all books
+GET http://localhost:3000/api/books
+
+### Get one book by ID
+GET http://localhost:3000/api/books/1
+
+### Delete a book from the DB
+DELETE http://localhost:3000/api/books/1
+
+### Update a book in the DB
+PATCH http://localhost:3000/api/books/1
