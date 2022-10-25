@@ -1,7 +1,11 @@
+import { IsNumber, IsString } from "class-validator";
+import { title } from "process";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Author } from "./author.entity";
+import { List } from "./list.entity";
 import { PublishYear } from "./publish-year.entity";
 import { Publisher } from "./publisher.entity";
+import { Title } from "./title.entity";
 import { User } from "./user.entity";
 
 @Entity()
@@ -10,26 +14,38 @@ export class Book {
   id: number;
 
   @Column()
+  @ManyToOne(() => Title, (title) => title.id)
   title: string;
 
   @Column()
+  @IsString()
   description: string;
 
   @Column()
+  @IsNumber()
   pages: number;
 
   @Column()
   @ManyToOne(() => Author, (author) => author.id) 
-  authorID: number;
+  authorId: number;
 
   @Column()
+  @IsNumber()
   @ManyToOne(() => Publisher, (publisher) => publisher.id) 
-  publisherID: number;
+  publisherId: number;
 
   @Column()
+  @IsString()
   @ManyToOne(() => PublishYear, (publishYear) => publishYear.id)
   publishYear: string;
   
+  @Column()
+  @IsNumber()
   @ManyToOne(() => User, (user) => user.id)
-  userID: number;
+  userId: number;
+
+  @Column()
+  @IsNumber()
+  @ManyToOne(() => List, (list) => list.id)
+  listId: number;
 }
