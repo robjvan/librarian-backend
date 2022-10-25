@@ -50,5 +50,9 @@ Head to [https://github.com/coreybutler/nvm-windows/releases](https://github.com
 - Switch node version: `nvm use 16.17.1`
 - Switch to default version: `nvm use node`
 
-## Postman Configuration
-Postman is the easiest way to test the API during development.  Download from [https://www.postman.com/](https://www.postman.com/)
+## **API Testing**
+
+### VS Code Extension
+The [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension by Huachao Mao is the simplest way to test the API during development
+### Postman Configuration
+Postman is another way to test the API during development.  Download from [https://www.postman.com/](https://www.postman.com/)
