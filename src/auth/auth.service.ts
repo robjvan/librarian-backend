@@ -1,14 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HttpResponseDto } from 'src/entities/dto/http-response.dto';
 import { UserSignupDto } from 'src/entities/dto/user-signup.dto';
 import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   @InjectRepository(User)
   private readonly repo: Repository<User>;
 
+  /**
+   * Save a new user to the database
+   * @param user details for new user
+   * @returns created user object
+   */
   async createUser(user: UserSignupDto): Promise<User> {
     try {
       Logger.debug('[AuthService] Saving new user to db...');
@@ -19,15 +25,14 @@ export class AuthService {
     }
   }
 
-  signIn(email: string, password: string) {
-    //
-  }
-
-  async confirmEmail(email: string) {
-    Logger.debug(`[AuthService] Passed email = ${email}`);
+  /**
+   * 
+   * @param email address to be confirmed
+   * @returns result of update operation
+   */
+  async confirmEmail(email: string): Promise<UpdateResult | HttpResponseDto>{ 
     try {
       const user: User = await this.repo.findOneBy({ email });
-      Logger.debug(`[AuthService] user.emailConfirmed = ${user.emailConfirmed}`);
 
       if (!user.emailConfirmed) {
         Logger.debug(`[AuthService] Confirming email address: ${email}`);
@@ -38,10 +43,37 @@ export class AuthService {
           .where({ email })
           .execute();
       } else {
-        return { status: 400, message: '[AuthService] Email has already been confirmed' };
+        return {
+          status: 400,
+          message: '[AuthService] Email has already been confirmed',
+        };
       }
-    } catch {}
+    } catch (err) {
+      Logger.debug(`[AuthService] Could not confirm email address, ${err}`)
+    }
+  }
 
-    // this.repo.update({email: email, emailConfimed: true}, User);
+  /**
+   * Sign in with standard credentials
+   * @param email user email
+   * @param password user password
+   * @returns authorization token
+   */
+  signIn(email: string, password: string): string {
+    return '';
+  }
+
+  /**
+   * Sign in with Google credentials
+   */
+  signInWithGoogle() {
+    // TODO: Add sign in with Google logic
+  }
+
+  /**
+   * Sign in with Apple credentials
+   */
+  signInWithApple() {
+    // TODO: Add sign in with Apple logic
   }
 }
