@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { GetUser } from 'src/decorators/get-user.decorator';
+import { BookDetailsDto } from 'src/entities/dto/book-details.dto';
 import { User } from 'src/entities/user.entity';
 import { BooksService } from './books.service';
 
@@ -13,7 +14,22 @@ export class BooksController {
   }
 
   @Get('/:id')
-  getBookById(id: number) {
+  getBookById(@Param('id') id: number) {
     return this.booksService.findBookById(id);
+  }
+
+  @Post('')
+  addBook(@GetUser() user: User, details: BookDetailsDto) {
+    return this.booksService.addBook(user.id, details);
+  }
+
+  @Patch('/:id')
+  updateBookDetails(@Param('id') id: number, details: BookDetailsDto) {
+    return this.booksService.updateBook(id, details);
+  }
+
+  @Delete('/:id')
+  deleteBookById(@Param('id') id: number) {
+    return this.booksService.deleteBookById(id);
   }
 }
