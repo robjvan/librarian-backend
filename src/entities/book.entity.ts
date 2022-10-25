@@ -1,4 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Author } from "./author.entity";
+import { PublishYear } from "./publish-year.entity";
+import { Publisher } from "./publisher.entity";
 import { User } from "./user.entity";
 
 @Entity()
@@ -13,17 +16,20 @@ export class Book {
   description: string;
 
   @Column()
-  pageCount: number;
+  pages: number;
 
   @Column()
+  @ManyToOne(() => Author, (author) => author.id) 
   authorID: number;
 
   @Column()
+  @ManyToOne(() => Publisher, (publisher) => publisher.id) 
   publisherID: number;
 
   @Column()
+  @ManyToOne(() => PublishYear, (publishYear) => publishYear.id)
   publishYear: string;
   
-  @ManyToOne((_type) => User) /// eager means we will automatically fetch the tasks 
+  @ManyToOne(() => User, (user) => user.id)
   userID: number;
 }
