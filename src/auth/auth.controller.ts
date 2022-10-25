@@ -28,6 +28,16 @@ export class AuthController {
     return this.authService.signIn(email, password);
   }
 
+  @Get('/signinWithGoogle')
+  signInWithGoogle() {
+    return this.authService.signInWithGoogle();
+  }
+
+  @Get('/signinWithApple')
+  signinWithApple() {
+    return this.authService.signInWithApple();
+  }
+
   @Post('/confirmEmail')
   confirmEmail(@Body() body: ConfirmEmailDto) {
     const { email } = body;
