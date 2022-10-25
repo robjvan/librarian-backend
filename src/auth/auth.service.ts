@@ -60,6 +60,7 @@ export class AuthService {
    * @returns authorization token
    */
   signIn(email: string, password: string): string {
+    // TODO: Add sign in logic
     return '';
   }
 
