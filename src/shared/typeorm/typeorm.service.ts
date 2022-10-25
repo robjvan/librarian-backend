@@ -3,6 +3,7 @@ import { TypeOrmOptionsFactory } from "@nestjs/typeorm";
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from "@nestjs/typeorm/dist";
 import { User } from "src/entities/user.entity";
+import { Book } from "src/entities/book.entity";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -18,7 +19,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.config.get<string>('DB_USER'),
       password: this.config.get<string>('DB_PASS'),
       // entities: ['dist/**/*.entity.{ts,js}'],
-      entities: [User],
+      entities: [User, Book],
       migrations: ['dist/migrations/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
       logger: 'file',
