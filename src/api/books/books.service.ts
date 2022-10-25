@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from 'src/entities/book.entity';
+import { BookDetailsDto } from 'src/entities/dto/book-details.dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class BooksService {
    * @param userId id of current user
    * @returns array of [Book]
    */
-  async findAllBooks(userId: number) {
+  async findAllBooks(userId: number): Promise<Book[]> {
     let results: Book[] = [];
     try {
       Logger.debug(`[BooksService] Retrieving list of books ...`)
@@ -29,7 +30,7 @@ export class BooksService {
    * @param id id of desired book
    * @returns book with passed id
    */
-  async findBookById(id: number) {
+  async findBookById(id: number): Promise<Book> {
     let result;
     try {
       Logger.debug(`[BooksService] Retrieving book with id ${id}`);
@@ -38,5 +39,33 @@ export class BooksService {
       Logger.debug(`[BooksService] Could not retrieve book with id ${id}`)
     }
     return result;
+  }
+  
+  /**
+   * Delete a book from the db
+   * @param id ID of book entry to delete
+   */
+  async deleteBookById(id: number): Promise<void> {
+    // TODO: Add delete book logic
+  }
+
+  /**
+   * Update a single book by ID
+   * @param id ID of book entry to update
+   * @param details new book details to write to db
+   */
+  async updateBook(id: number, details: BookDetailsDto): Promise<Book> {
+    // TODO: Add logic to update a book entry
+    return new Book();
+  }
+
+  /**
+   * Add a new book to db
+   * @param userId ID of user that is adding book to db
+   * @param details new book details to write to db
+   */
+  async addBook(userId: number, details: BookDetailsDto): Promise<Book> {
+    // TODO: Add logic to create a book entry 
+    return new Book();
   }
 }
