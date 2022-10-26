@@ -8,7 +8,7 @@ export class UserService {
   @InjectRepository(User)
   private readonly repo: Repository<User>;
 
-  getUserDetails(id: number): Promise<User> {
+  getUser(id: number): Promise<User> {
     return this.repo.findOneBy({id});
   }
 
@@ -16,7 +16,8 @@ export class UserService {
     return this.repo.find();
   }
 
-  deleteUser(id: number) {
-    return this.repo.delete({ id });
+  async deleteUser(id: number) {
+    const user: User = await this.getUser(id);
+    return this.repo.remove([user]);
   }
 }
