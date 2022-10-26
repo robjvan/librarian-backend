@@ -59,7 +59,7 @@ export class AuthService {
    * @param password user password
    * @returns authorization token
    */
-  signIn(email: string, password: string): string {
+  async signIn(email: string, password: string): Promise<string> {
     // TODO: Add sign in logic
     return '';
   }
@@ -67,14 +67,14 @@ export class AuthService {
   /**
    * Sign in with Google credentials
    */
-  signInWithGoogle() {
+  async signInWithGoogle() {
     // TODO: Add sign in with Google logic
   }
 
   /**
    * Sign in with Apple credentials
    */
-  signInWithApple() {
+  async signInWithApple() {
     // TODO: Add sign in with Apple logic
   }
 }
