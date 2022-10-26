@@ -47,6 +47,10 @@ export class BooksService {
    */
   async deleteBookById(id: number): Promise<void> {
     // TODO: Add delete book logic
+
+    /// 1. Check if book with passed ID  exists in db, if not return 404
+
+    /// 2. Delete book from db using passed ID
   }
 
   /**
@@ -56,6 +60,13 @@ export class BooksService {
    */
   async updateBook(id: number, details: BookDetailsDto): Promise<Book> {
     // TODO: Add logic to update a book entry
+
+    /// 1. Check if book with passed ID exists in db, if not return 404
+
+    /// 2. Write [updatedBook] object to db
+
+    /// 3. Return updated book entry
+
     return new Book();
   }
 
@@ -66,6 +77,19 @@ export class BooksService {
    */
   async addBook(userId: number, details: BookDetailsDto): Promise<Book> {
     // TODO: Add logic to create a book entry 
+
+    /// 1. Check for pre-existing entry using userID and book details
+
+    /// 2. Check if author/publisher/title/publish-year exist in DB
+    ///   2a. If not exists, add it and retrieve ID
+    ///   2b. If exists, retrieve ID
+
+    /// 3. Assign data to [newBook] object
+
+    /// 4. Save new entry to db
+
+    /// 5. Return created book entry
+
     return new Book();
   }
 }
