@@ -43,9 +43,4 @@ export class Book {
   @IsNumber()
   @ManyToOne(() => User, (user) => user.id)
   userId: number;
-
-  @Column()
-  @IsNumber()
-  @ManyToOne(() => List, (list) => list.id)
-  listId: number;
 }
