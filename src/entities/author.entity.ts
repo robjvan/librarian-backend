@@ -5,7 +5,7 @@ import { Book } from "./book.entity";
 @Entity()
 export class Author {
   @PrimaryGeneratedColumn()
-  @OneToMany(() => Book, (book) => book.authorID)
+  @OneToMany(() => Book, (book) => book.authorId)
   id: number;
 
   @Column()
