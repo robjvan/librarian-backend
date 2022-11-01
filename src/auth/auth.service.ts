@@ -7,13 +7,17 @@ import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class AuthService {
-  @InjectRepository(User)
-  private readonly repo: Repository<User>;
+  constructor(
+    @InjectRepository(User)
+    private readonly repo: Repository<User>,
+  ) {}
 
   /**
    * Save a new user to the database
+   * 
    * @param user details for new user
-   * @returns created user object
+   * 
+   * @returns newly created User{} object 
    */
   async createUser(user: UserSignupDto): Promise<User> {
     try {
@@ -26,9 +30,12 @@ export class AuthService {
   }
 
   /**
-   *
-   * @param email address to be confirmed
-   * @returns result of update operation
+   * Used to confirm email address of a user
+   * 
+   * @param email email address to be confirmed
+   * 
+   * @returns result of update operation as UpdateResult{} or 
+   * HttpResponseDto{} if user has already confirmed their email address 
    */
   async confirmEmail(email: string): Promise<UpdateResult | HttpResponseDto> {
     let result: UpdateResult;
@@ -72,10 +79,12 @@ export class AuthService {
   }
 
   /**
-   * Sign in with standard credentials
-   * @param email user email
-   * @param password user password
-   * @returns authorization token
+   * Sign in with email/password credentials
+   * 
+   * @param email user email as string{}
+   * @param password user password as string{}
+   * 
+   * @returns authorization token as string{}
    */
   async signIn(email: string, password: string): Promise<string> {
     // TODO: Add sign in logic
