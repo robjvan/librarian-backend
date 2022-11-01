@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
+import { AfterInsert, AfterRemove, AfterUpdate } from 'typeorm';
 import { UserService } from './user.service';
 
 @Controller('api/user')
@@ -17,7 +18,7 @@ export class UserController {
   @Get('/:id')
   getUserDetails(@Param('id') id: number) {
     // TODO: Add user not found error/message
-    return this.userService.getUserDetails(id);
+    return this.userService.getUser(id);
   }
 
   @Delete('/:id')
@@ -26,7 +27,8 @@ export class UserController {
     return this.userService.deleteUser(id);
   }
 
-  /// PATCH to update user details
+  /// PATCH to update user details (save())
 
-  /// DELETE a user
+  /// DELETE a user (remove())
+
 }

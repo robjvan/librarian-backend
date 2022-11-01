@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from "class-validator";
 import { title } from "process";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Author } from "./author.entity";
 import { List } from "./list.entity";
 import { PublishYear } from "./publish-year.entity";
@@ -43,4 +43,20 @@ export class Book {
   @IsNumber()
   @ManyToOne(() => User, (user) => user.id)
   userId: number;
+  
+  /// Hooks
+  @AfterInsert()
+  afterInsert() {
+    // TODO: Add logging messages
+  }
+
+  @AfterRemove()
+  afterRemove() {
+    // TODO: Add logging messages
+  }
+
+  @AfterUpdate()
+  afterUpdate() {
+    // TODO: Add logging messages
+  }
 }

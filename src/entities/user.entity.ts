@@ -1,6 +1,6 @@
 import { IsEmail, IsOptional, IsString } from "class-validator";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Book } from "./book.entity";
+import { AfterInsert, AfterRemove, AfterUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity()
@@ -34,4 +34,20 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+  
+  /// Hooks
+  @AfterInsert()
+  afterInsert() {
+    // TODO: Add logging messages
+  }
+
+  @AfterRemove()
+  afterRemove() {
+    // TODO: Add logging messages
+  }
+
+  @AfterUpdate()
+  afterUpdate() {
+    // TODO: Add logging messages
+  }
 }

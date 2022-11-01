@@ -1,5 +1,5 @@
 import { IsNumber, IsString } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Title {
@@ -9,4 +9,20 @@ export class Title {
   @Column()
   @IsString()
   title: string;
+  
+  /// Hooks
+  @AfterInsert()
+  afterInsert() {
+    // TODO: Add logging messages
+  }
+
+  @AfterRemove()
+  afterRemove() {
+    // TODO: Add logging messages
+  }
+
+  @AfterUpdate()
+  afterUpdate() {
+    // TODO: Add logging messages
+  }
 }

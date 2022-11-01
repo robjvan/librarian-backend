@@ -26,30 +26,48 @@ export class AuthService {
   }
 
   /**
-   * 
+   *
    * @param email address to be confirmed
    * @returns result of update operation
    */
-  async confirmEmail(email: string): Promise<UpdateResult | HttpResponseDto>{ 
+  async confirmEmail(email: string): Promise<UpdateResult | HttpResponseDto> {
+    let result: UpdateResult;
     try {
       const user: User = await this.repo.findOneBy({ email });
 
       if (!user.emailConfirmed) {
         Logger.debug(`[AuthService] Confirming email address: ${email}`);
-        return this.repo
-          .createQueryBuilder()
-          .update(User)
-          .set({ emailConfirmed: true })
-          .where({ email })
-          .execute();
+        try {
+          result = await this.repo
+            .createQueryBuilder()
+            .update(User)
+            .set({ emailConfirmed: true })
+            .where({ email })
+            .execute();
+        } catch (err) {
+          Logger.debug(`[AuthService] Could not confirm email address, ${err}`);
+        }
+
+        if (result != null) {
+          return result;
+        } else {
+          const errorMessage: HttpResponseDto = {
+            status: 500,
+            message: '[AuthService] Could not confirm email address.',
+          };
+          return errorMessage;
+        }
       } else {
-        return {
+        const alreadyConfirmedMessage: HttpResponseDto = {
           status: 400,
           message: '[AuthService] Email has already been confirmed',
         };
+        return alreadyConfirmedMessage;
       }
     } catch (err) {
-      Logger.debug(`[AuthService] Could not confirm email address, ${err}`)
+      Logger.debug(
+        `[AuthService] Could not find record for given email, ${err}`,
+      );
     }
   }
 
