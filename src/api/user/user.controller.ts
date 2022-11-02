@@ -9,22 +9,34 @@ export class UserController {
   @Get()
   respond(req, res, next) {
     return this.userService.getAllUsers();
-    // return {status: '400', message: 'api/user OK'};
   }
-
-  /// POST to create a user
 
   /// GET user details by id
   @Get('/:id')
-  getUserDetails(@Param('id') id: number) {
-    // TODO: Add user not found error/message
-    return this.userService.getUser(id);
+  async getUserDetails(@Param('id') id: number) {
+    const user = await this.userService.getUser(id);
+    if (user) {
+      return this.userService.getUser(id);
+    } else {
+      return {
+        status: 404,
+        message: `User with ID ${id} not found`
+      }
+    }
   }
 
+  /// DELETE user details by id
   @Delete('/:id')
-  deleteUser(@Param('id') id: number) {
-    // TODO: Add user not found error/message
-    return this.userService.deleteUser(id);
+  async deleteUser(@Param('id') id: number) {
+    const user = await this.userService.getUser(id);
+    if (user) {
+      return this.userService.deleteUser(id);
+    } else {
+      return {
+        status: 404,
+        message: `User with ID ${id} not found`
+      }
+    }
   }
 
   /// PATCH to update user details (save())
