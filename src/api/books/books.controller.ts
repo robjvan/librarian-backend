@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { GetUser } from 'src/decorators/get-user.decorator';
-import { BookDetailsDto } from 'src/entities/dto/book-details.dto';
-import { User } from 'src/entities/user.entity';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { BookDetailsDto } from 'src/common/entities/dto/book-details.dto';
+import { User } from 'src/common/entities/user.entity';
 import { BooksService } from './books.service';
 
 @Controller('books')

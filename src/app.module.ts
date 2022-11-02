@@ -7,10 +7,10 @@ import { MiddlewareConsumer, RouteInfo } from '@nestjs/common/interfaces';
 import * as rateLimit from 'express-rate-limit';
 import { UserService } from './api/user/user.service';
 import { AuthModule } from './auth/auth.module';
-import { getEnvPath } from './common/helper/env.helper';
+import { getEnvPath } from './common/helpers/env.helper';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm/dist';
-import { TypeOrmConfigService } from './shared/typeorm/typeorm.service';
+import { TypeOrmConfigService } from './common/services/typeorm.service';
 import { UserModule } from './api/user/user.module';
 import { BooksModule } from './api/books/books.module';
 

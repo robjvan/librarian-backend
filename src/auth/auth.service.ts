@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HttpResponseDto } from 'src/entities/dto/http-response.dto';
-import { UserSignupDto } from 'src/entities/dto/user-signup.dto';
-import { User } from 'src/entities/user.entity';
+import { HttpResponseDto } from 'src/common/entities/dto/http-response.dto';
+import { UserSignupDto } from 'src/common/entities/dto/user-signup.dto';
+import { User } from 'src/common/entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
