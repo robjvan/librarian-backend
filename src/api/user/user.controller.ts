@@ -20,8 +20,8 @@ export class UserController {
     } else {
       return {
         status: 404,
-        message: `User with ID ${id} not found`
-      }
+        message: `User with ID ${id} not found`,
+      };
     }
   }
 
@@ -34,13 +34,12 @@ export class UserController {
     } else {
       return {
         status: 404,
-        message: `User with ID ${id} not found`
-      }
+        message: `User with ID ${id} not found`,
+      };
     }
   }
 
   /// PATCH to update user details (save())
 
   /// DELETE a user (remove())
-
 }

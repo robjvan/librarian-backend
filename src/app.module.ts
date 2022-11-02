@@ -22,7 +22,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     AuthModule,
     UserModule,
-    BooksModule
+    BooksModule,
   ],
   controllers: [],
   providers: [],

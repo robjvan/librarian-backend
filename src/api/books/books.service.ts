@@ -17,10 +17,10 @@ export class BooksService {
   async findAllBooks(userId: number): Promise<Book[]> {
     let results: Book[] = [];
     try {
-      Logger.debug(`[BooksService] Retrieving list of books ...`)
+      Logger.debug(`[BooksService] Retrieving list of books ...`);
       results = await this.repo.findBy({ id: userId });
     } catch (err) {
-      Logger.debug(`[BooksService] Could not retrieve list of books: ${err}`)
+      Logger.debug(`[BooksService] Could not retrieve list of books: ${err}`);
     }
     return results;
   }
@@ -35,21 +35,19 @@ export class BooksService {
     try {
       Logger.debug(`[BooksService] Retrieving book with id ${id}`);
       result = await this.repo.findOneBy({ id });
-    }catch (err) {
-      Logger.debug(`[BooksService] Could not retrieve book with id ${id}`)
+    } catch (err) {
+      Logger.debug(`[BooksService] Could not retrieve book with id ${id}`);
     }
     return result;
   }
-  
+
   /**
    * Delete a book from the db
    * @param id ID of book entry to delete
    */
   async deleteBookById(id: number): Promise<void> {
     // TODO: Add delete book logic
-
     /// 1. Check if book with passed ID  exists in db, if not return 404
-
     /// 2. Delete book from db using passed ID
   }
 
@@ -76,7 +74,7 @@ export class BooksService {
    * @param details new book details to write to db
    */
   async addBook(userId: number, details: BookDetailsDto): Promise<Book> {
-    // TODO: Add logic to create a book entry 
+    // TODO: Add logic to create a book entry
 
     /// 1. Check for pre-existing entry using userID and book details
 

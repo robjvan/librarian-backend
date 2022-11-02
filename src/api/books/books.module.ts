@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
-import { Book } from 'src/entities/book.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Book } from 'src/common/entities/book.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Book])],

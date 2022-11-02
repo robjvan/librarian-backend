@@ -14,10 +14,10 @@ export class AuthService {
 
   /**
    * Save a new user to the database
-   * 
+   *
    * @param user details for new user
-   * 
-   * @returns newly created User{} object 
+   *
+   * @returns newly created User{} object
    */
   async createUser(user: UserSignupDto): Promise<User> {
     try {
@@ -31,11 +31,11 @@ export class AuthService {
 
   /**
    * Used to confirm email address of a user
-   * 
+   *
    * @param email email address to be confirmed
-   * 
-   * @returns result of update operation as UpdateResult{} or 
-   * HttpResponseDto{} if user has already confirmed their email address 
+   *
+   * @returns result of update operation as UpdateResult{} or
+   * HttpResponseDto{} if user has already confirmed their email address
    */
   async confirmEmail(email: string): Promise<UpdateResult | HttpResponseDto> {
     let result: UpdateResult;
@@ -80,10 +80,10 @@ export class AuthService {
 
   /**
    * Sign in with email/password credentials
-   * 
+   *
    * @param email user email as string{}
    * @param password user password as string{}
-   * 
+   *
    * @returns authorization token as string{}
    */
   async signIn(email: string, password: string): Promise<string> {

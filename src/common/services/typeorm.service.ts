@@ -1,9 +1,9 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { TypeOrmOptionsFactory } from "@nestjs/typeorm";
+import { Inject, Injectable } from '@nestjs/common';
+import { TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions } from "@nestjs/typeorm/dist";
-import { User } from "src/common/entities/user.entity";
-import { Book } from "src/common/entities/book.entity";
+import { TypeOrmModuleOptions } from '@nestjs/typeorm/dist';
+import { User } from 'src/common/entities/user.entity';
+import { Book } from 'src/common/entities/book.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -24,6 +24,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrationsTableName: 'typeorm_migrations',
       logger: 'file',
       synchronize: true, //! never use TRUE in production!!!
-    };      
+    };
   }
 }
