@@ -1,8 +1,8 @@
 import { Controller, Post, Get, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserSignupDto } from '../entities/dto/user-signup.dto';
-import { UserCredentialsDto } from 'src/entities/dto/user-credentials.dto';
-import { ConfirmEmailDto } from 'src/entities/dto/confirm-email.dto';
+import { UserSignupDto } from '../common/entities/dto/user-signup.dto';
+import { UserCredentialsDto } from 'src/common/entities/dto/user-credentials.dto';
+import { ConfirmEmailDto } from 'src/common/entities/dto/confirm-email.dto';
 
 @Controller('auth')
 export class AuthController {
