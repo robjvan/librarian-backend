@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: Librarian API
-  description: Simple API for accessing Librarian DB
+  description: API for accessing Librarian DB
 
 servers:
   - url: https://api.yourlibrarian.ca/v1
