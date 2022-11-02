@@ -22,7 +22,7 @@ export class AuthController {
     }
   }
 
-  @Get('/signin')
+  @Post('/signin')
   signIn(@Body() body: UserCredentialsDto) {
     const { email, password } = body;
     return this.authService.signIn(email, password);
