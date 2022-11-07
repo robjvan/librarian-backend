@@ -14,7 +14,7 @@ export class Book {
   id: number;
 
   @Column()
-  @ManyToOne(() => Title, (title) => title.id)
+  // @ManyToOne(() => Title, (title) => title.id)
   title: string;
 
   @Column()
@@ -26,22 +26,22 @@ export class Book {
   pages: number;
 
   @Column()
-  @ManyToOne(() => Author, (author) => author.id) 
+  // @ManyToOne(() => Author, (author) => author.id) 
   authorId: number;
 
   @Column()
   @IsNumber()
-  @ManyToOne(() => Publisher, (publisher) => publisher.id) 
+  // @ManyToOne(() => Publisher, (publisher) => publisher.id) 
   publisherId: number;
 
   @Column()
   @IsString()
-  @ManyToOne(() => PublishYear, (publishYear) => publishYear.id)
+  // @ManyToOne(() => PublishYear, (publishYear) => publishYear.id)
   publishYear: string;
   
   @Column()
   @IsNumber()
-  @ManyToOne(() => User, (user) => user.id)
+  // @ManyToOne(() => User, (user) => user.id)
   userId: number;
   
   /// Hooks

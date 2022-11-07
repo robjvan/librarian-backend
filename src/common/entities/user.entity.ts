@@ -6,7 +6,7 @@ import { AfterInsert, AfterRemove, AfterUpdate, Column, CreateDateColumn, Entity
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  @OneToMany(_type => Book, book => book.userId, { eager: true }) /// eager means we will automatically fetch the tasks 
+  // @OneToMany(_type => Book, book => book.userId, { eager: true }) /// eager means we will automatically fetch the tasks 
   id: number;
 
   @Column({ unique: true })
