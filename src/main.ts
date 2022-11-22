@@ -19,7 +19,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors();
 
-  await app.listen(config.get<number>('PORT'), () => {
+  await app.listen(port, () => {
     Logger.log(`Server initialized and waiting for requests`);
     Logger.debug('[WEB]', config.get<string>('BASE_URL'));
   });
