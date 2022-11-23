@@ -39,7 +39,7 @@ export class UserSubscriptionService {
   }
 
   /** Find single user subscription record by ID
-   * 
+   *
    * @param id UserSubscription ID to fetch
    * @returns UserSubscription record with given ID
    */
@@ -47,14 +47,13 @@ export class UserSubscriptionService {
     let result: UserSubscription;
 
     try {
-      result = await this.userSubscriptionsRepo.findOne({where: {id}});
+      result = await this.userSubscriptionsRepo.findOne({ where: { id } });
 
       if (!result) {
-        throw new NotFoundException(); 
+        throw new NotFoundException();
       }
 
       return result;
-
     } catch (err) {
       Logger.error(`Could not fetch user subscription with id ${id}`, err);
     }
@@ -67,8 +66,9 @@ export class UserSubscriptionService {
    */
   async findOneByUserId(userId: number): Promise<UserSubscription> {
     /// 1. Fetch User record byt userId to get subscriptionId
-    const subscriptionId = (await this.usersService.findOneById(userId)).subscriptionId;
-    
+    const subscriptionId = (await this.usersService.findOneById(userId))
+      .subscriptionId;
+
     /// 2. Fetch subscription record with given ID
     const result = await this.findOneById(subscriptionId);
 
@@ -76,14 +76,14 @@ export class UserSubscriptionService {
     return result;
   }
 
-  /** Find subscription record by username 
+  /** Find subscription record by username
    *
    * @param userId User ID to find subscription for
    * @returns UserSubscription record
    */
   async findOneByUsername(username: string): Promise<UserSubscription> {
     /// 1. Get userId
-    const user = await this.usersService.findOneByUsername( username );
+    const user = await this.usersService.findOneByUsername(username);
 
     /// 2. Pass userId to findOneByUserId
     return await this.findOneByUserId(user.id);
