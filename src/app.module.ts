@@ -14,6 +14,7 @@ import { TypeOrmConfigService } from './common/services/typeorm.service';
 import { UserModule } from './api/users/users.module';
 import { BooksModule } from './api/books/books.module';
 import { configValidationSchema } from './common/envs/config.schema';
+import { InsightsModule } from './api/insights/insights.module';
 
 // const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
@@ -30,6 +31,7 @@ import { configValidationSchema } from './common/envs/config.schema';
     AuthModule,
     UserModule,
     BooksModule,
+    InsightsModule,
   ],
   controllers: [],
   providers: [],
