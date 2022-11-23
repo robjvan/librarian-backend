@@ -1,0 +1,5 @@
+### Get All Users
+GET http://localhost:3000/admin/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhZEBkYWQuY29tIiwiaWF0IjoxNjY5MTY5NzA5LCJleHAiOjE2NjkxNzMzMDl9.JTP-MG9CCyYxXn-yH4VSbLx9M8OV1SZb3-1uWPLuMdg
+
+
