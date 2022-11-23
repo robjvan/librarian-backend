@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common';
-import { GetUser } from 'src/common/decorators/get-user.decorator';
-import { User } from 'src/common/entities/user.entity';
-import { UserSubscriptionService } from './user-subscription.service';
-import { UsersService } from './users.service';
+import { Controller, Get, Patch, Body, Logger } from "@nestjs/common";
+import { GetUser } from "src/common/decorators/get-user.decorator";
+import { User } from "src/common/entities/user.entity";
+import { UserSubscriptionService } from "./user-subscription.service";
+import { UsersService } from "./users.service";
 
 @Controller('api/v1/user')
 export class UserController {
@@ -32,6 +32,7 @@ export class UserController {
   // Update user subscription data (upgrade or downgrade)
   @Patch('/subscription')
   updateSubscription(@GetUser() user: User) {
+    Logger.debug(user);
     // TODO: Finish this
   }
 
@@ -44,6 +45,7 @@ export class UserController {
   // Close user account
   @Patch('/terminate')
   closeUserAccount(@GetUser() user: User) {
+    Logger.debug(user);
     //* This is a sticky one.
     //* Ideally, we want to scramble any personal data while retaining useful information
     //* such as user books, anonymous demographics, etc.
