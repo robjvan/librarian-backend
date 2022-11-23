@@ -1,27 +1,28 @@
-### Get All Users
-GET http://localhost:3000/api/v1/user/allusers
-
-
 ### Sign up a new user
 POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-  "username": "Dad",
-  "email": "dad2@dad.com",
-  "password": "Asdf123!"
+  "username": "dad3@dad.com",
+  "password": "Asdf123!",
+  "platform": "web"
 }
-
-### Get user details by ID
-GET http://localhost:3000/api/v1/user/6
 
 ### Confirm email address
 Post http://localhost:3000/auth/confirmEmail
 Content-Type: application/json
 
 {
-  "email": "dad2@dad.com"
+  "username": "dad2@dad.com",
+  "token": "dc254b438f9da5c6"
 }
 
-### Delete User
-DELETE http://localhost:3000/api/user/1
+### Sign in as an existing user
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "username": "dad@dad.com",
+  "password": "Asdf123!",
+  "platform": "windows"
+}

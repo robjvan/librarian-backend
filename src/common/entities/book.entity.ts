@@ -18,11 +18,9 @@ export class Book {
   title: string;
 
   @Column()
-  @IsString()
   description: string;
 
   @Column()
-  @IsNumber()
   pages: number;
 
   @Column()
@@ -30,17 +28,14 @@ export class Book {
   authorId: number;
 
   @Column()
-  @IsNumber()
   // @ManyToOne(() => Publisher, (publisher) => publisher.id) 
   publisherId: number;
 
   @Column()
-  @IsString()
   // @ManyToOne(() => PublishYear, (publishYear) => publishYear.id)
-  publishYear: string;
+  publishYear: number;
   
   @Column()
-  @IsNumber()
   // @ManyToOne(() => User, (user) => user.id)
   userId: number;
   

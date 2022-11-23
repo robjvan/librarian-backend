@@ -1,0 +1,10 @@
+### Get All Users
+GET http://localhost:3000/api/v1/user/allusers
+
+
+### Get user details by ID
+GET http://localhost:3000/api/v1/user/6
+
+
+### Delete User
+DELETE http://localhost:3000/api/user/1

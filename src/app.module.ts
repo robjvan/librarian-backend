@@ -1,24 +1,31 @@
 import { Module } from '@nestjs/common';
 // import { AppController } from './app.controller';
 // import { AppService } from './app.service';
-import { UserController } from './api/user/user.controller';
-import { MiddlewareConsumer, RouteInfo } from '@nestjs/common/interfaces';
+// import { UserController } from './api/user/user.controller';
+import { RouteInfo } from '@nestjs/common/interfaces';
 
-import * as rateLimit from 'express-rate-limit';
-import { UserService } from './api/user/user.service';
+// import * as rateLimit from 'express-rate-limit';
+// import { UserService } from './api/user/user.service';
 import { AuthModule } from './auth/auth.module';
-import { getEnvPath } from './common/helpers/env.helper';
+// import { getEnvPath } from './common/helpers/env.helper';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm/dist';
 import { TypeOrmConfigService } from './common/services/typeorm.service';
-import { UserModule } from './api/user/user.module';
+import { UserModule } from './api/users/users.module';
 import { BooksModule } from './api/books/books.module';
+import { configValidationSchema } from './common/envs/config.schema';
 
-const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
+// const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath, isGlobal: true }),
+    ConfigModule.forRoot({
+      // envFilePath: `src/common/envs/${envFilePath}`,
+      envFilePath: `src/common/envs/development.env`,
+      validationSchema: configValidationSchema,
+      isGlobal: true,
+      load: [],
+    }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     AuthModule,
     UserModule,
@@ -40,25 +47,25 @@ export class AppModule {
     // { path: 'api/v1/files/', method: RequestMethod.GET },
   ];
 
-  configure(consumer: MiddlewareConsumer): void {
-    // limit standard endpoints to 100 requests per minute
-    consumer
-      .apply(
-        rateLimit({
-          windowMS: 1 * 60 * 1000,
-          max: 100,
-        }),
-      )
-      .exclude(...this._limitedRoutes)
-      .forRoutes('api/*');
-    // limit restricted endpoints to 1 request per 15 seconds
-    consumer
-      .apply(
-        rateLimit({
-          windowMs: 15 * 1000,
-          max: 3,
-        }),
-      )
-      .forRoutes(...this._limitedRoutes);
-  }
+  // configure(consumer: MiddlewareConsumer): void {
+  //   // limit standard endpoints to 100 requests per minute
+  //   consumer
+  //     .apply(
+  //       rateLimit({
+  //         windowMS: 1 * 60 * 1000,
+  //         max: 100,
+  //       }),
+  //     )
+  //     .exclude(...this._limitedRoutes)
+  //     .forRoutes('api/*');
+  //   // limit restricted endpoints to 1 request per 15 seconds
+  //   consumer
+  //     .apply(
+  //       rateLimit({
+  //         windowMs: 15 * 1000,
+  //         max: 3,
+  //       }),
+  //     )
+  //     .forRoutes(...this._limitedRoutes);
+  // }
 }

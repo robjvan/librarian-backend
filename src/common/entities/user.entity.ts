@@ -1,53 +1,70 @@
-import { IsEmail, IsOptional, IsString } from "class-validator";
-import { Book } from "./book.entity";
-import { AfterInsert, AfterRemove, AfterUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserCountry } from './country.entity';
+import { DemographicInfo } from './demographic-info.entity';
+import { UserType } from './enum/user-type.enum';
+import { UserSubscription } from './user-subscription.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  // @OneToMany(_type => Book, book => book.userId, { eager: true }) /// eager means we will automatically fetch the tasks 
+  // @OneToMany(() => Book, (book) => book.userId)
   id: number;
 
   @Column({ unique: true })
-  @IsEmail()
-  email: string;
-  
-  @Column()
-  @IsString()
   username: string;
-  
+
   @Column()
-  @IsString()
   password: string;
-  
-  @Column({ default: 'https://placekitten.com/200/200'})
-  @IsOptional()
-  @IsString()
+
+  @Column({ default: 'https://placekitten.com/200/200' })
   profilePicUrl: string;
-  
-  @Column('boolean', {default: false})
+
+  @Column({ default: false })
   emailConfirmed: boolean;
+
+  @Column({ nullable: true })
+  // @OneToOne(() => UserSubscription, (userSub) => userSub.id)
+  // @JoinColumn()
+  subscriptionId: number;
+
+  @Column({ default: UserType.USER })
+  accountType: UserType; /// admin, user, tester
+
+  @Column({ nullable: true })
+  // @OneToOne(() => DemographicInfo, (demoInfo) => demoInfo.id)
+  // @JoinColumn()
+  demographicId: number;
+
+  @Column({ nullable: true })
+  // @OneToOne(() => UserCountry, (userCountry) => userCountry.id)
+  // @JoinColumn()
+  countryCodeId: number;
 
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column({ nullable: true })
+  emailToken: string;
+
+  @Column({ nullable: true })
+  smsToken: number;
+
+  @Column({default: false})
+  has2faEnabled: boolean;
+
   @UpdateDateColumn()
   updatedAt: Date;
-  
-  /// Hooks
-  @AfterInsert()
-  afterInsert() {
-    // TODO: Add logging messages
-  }
 
-  @AfterRemove()
-  afterRemove() {
-    // TODO: Add logging messages
-  }
-
-  @AfterUpdate()
-  afterUpdate() {
-    // TODO: Add logging messages
-  }
+  @DeleteDateColumn({ nullable: true })
+  cancelledAt: Date;
 }

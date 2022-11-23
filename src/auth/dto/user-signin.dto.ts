@@ -1,16 +1,13 @@
-import {
-  IsEmail,
-  IsString,
-  Length,
-  Matches,
-} from 'class-validator';
+import { IsEmail, IsEnum, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { UserPlatform } from "src/common/entities/enum/user-platform.enum";
 
-export class UserSignupDto {
-  @IsEmail({ unique: true })
-  email: string;
+export class UserSigninDto {
+  @IsEmail()
+  username: string;
 
   @IsString()
-  @Length(6, 32)
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
+  @MaxLength(32, { message: 'Password must be less than 32 characters' })
   @Matches(RegExp('(?=.*[a-z])'), {
     message:
       'Password must contain at least one lower case character',
@@ -30,6 +27,6 @@ export class UserSignupDto {
   password: string;
 
   @IsString()
-  @Length(3, 32)
-  username: string;
+  @IsEnum(UserPlatform)
+  platform: UserPlatform;
 }

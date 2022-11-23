@@ -1,123 +1,249 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { HttpResponseDto } from 'src/common/entities/dto/http-response.dto';
-import { UserSignupDto } from 'src/common/entities/dto/user-signup.dto';
-import { User } from 'src/common/entities/user.entity';
-import { Repository, UpdateResult } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import { IJwtPayload } from 'src/common/interfaces/jwt-payload.interface';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/common/entities/user.entity';
+import { Repository } from 'typeorm';
+import { UsersService } from 'src/api/users/users.service';
+import * as bcrypt from 'bcrypt';
+import { IJwtPayload } from './jwt/jwt-payload.interface';
+import { UserLoginRecord } from 'src/common/entities/user-login-record.entity';
+import { ConfirmEmailDto } from './dto/confirm-email.dto';
+import { UserSubscription } from 'src/common/entities/user-subscription.entity';
+import { UserLoginRecordDto } from './dto/user-login-record.dto';
+import { UserSignupRecord } from 'src/common/entities/user-signup-record.entity';
+import { randomBytes, randomInt } from 'crypto';
+import { CreateUserDto } from './dto/create_user.dto';
+import { UserSigninDto } from './dto/user-signin.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private readonly repo: Repository<User>,
+    private usersRepo: Repository<User>,
+    @InjectRepository(UserSubscription)
+    private userSubscriptionsRepo: Repository<UserSubscription>,
+    @InjectRepository(UserLoginRecord)
+    private userLoginsRepo: Repository<UserLoginRecord>,
+    @InjectRepository(UserSignupRecord)
+    private userSignupRepo: Repository<UserSignupRecord>,
+    private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
-  /**
-   * Save a new user to the database
+  /** Capture user sign up record and save new record to the DB
    *
-   * @param user details for new user
-   *
-   * @returns newly created User{} object
+   * @param signupRecord Details of user signup to be recorded (userId, platform)
    */
-  async createUser(user: UserSignupDto): Promise<User> {
+  async captureUserSignupRecord(signupRecord: UserSignupRecord): Promise<void> {
+    const { userId, platform } = signupRecord;
+    let result: UserLoginRecord;
+
+    /// 1. Create user login record
+    const record: UserLoginRecord = this.userSignupRepo.create({
+      userId,
+      platform,
+    });
+
+    /// 2. Save new user login record to DB
     try {
-      Logger.debug('[AuthService] Saving new user to db...');
-      const newUser = this.repo.save(user);
-      return newUser;
+      result = await this.userSignupRepo.save(record);
     } catch (err) {
-      Logger.error(`[AuthService] Could not save new user to db: ${err}`);
+      Logger.error('Could not save user sign up record', err);
     }
+
+    if (!result) {
+      throw new InternalServerErrorException();
+    }
+
+    return null;
   }
 
-  /**
-   * Used to confirm email address of a user
+  /** Capture user log in and save new record to the DB
    *
-   * @param email email address to be confirmed
-   *
-   * @returns result of update operation as UpdateResult{} or
-   * HttpResponseDto{} if user has already confirmed their email address
+   * @param loginRecord Details of user login to record (userId, platform)
    */
-  async confirmEmail(email: string): Promise<UpdateResult | HttpResponseDto> {
-    let result: UpdateResult;
+  async captureUserLoginRecord(loginRecord: UserLoginRecordDto): Promise<void> {
+    const { userId, platform } = loginRecord;
+    let result: UserLoginRecord;
+
+    /// 1. Create user login record
+    const record: UserLoginRecord = this.userLoginsRepo.create({
+      userId,
+      platform,
+    });
+
+    /// 2. Save new user login record to DB
     try {
-      const user: User = await this.repo.findOneBy({ email });
+      result = await this.userLoginsRepo.save(record);
+    } catch (err) {
+      Logger.error('Could not save UserLoginRecord', err);
+    }
 
-      if (!user.emailConfirmed) {
-        Logger.debug(`[AuthService] Confirming email address: ${email}`);
-        try {
-          result = await this.repo
-            .createQueryBuilder()
-            .update(User)
-            .set({ emailConfirmed: true })
-            .where({ email })
-            .execute();
-        } catch (err) {
-          Logger.debug(`[AuthService] Could not confirm email address, ${err}`);
-        }
+    if (!result) {
+      throw new InternalServerErrorException();
+    }
 
-        if (result != null) {
-          return result;
-        } else {
-          const errorMessage: HttpResponseDto = {
-            status: 500,
-            message: '[AuthService] Could not confirm email address.',
-          };
-          return errorMessage;
-        }
-      } else {
-        const alreadyConfirmedMessage: HttpResponseDto = {
-          status: 400,
-          message: '[AuthService] Email has already been confirmed',
-        };
-        return alreadyConfirmedMessage;
+    return null;
+  }
+
+  /** Confirm email address of existing user
+   *
+   * @param email Email address of existing user
+   * @returns Updated user record
+   */
+  async confirmEmail(body: ConfirmEmailDto): Promise<User> {
+    const { username, token } = body;
+    let record: User;
+    let result: User;
+
+    try {
+      /// 1. Search DB for user with matching emailToken
+      record = await this.usersRepo.findOne({
+        where: [{ username }, { emailToken: token }],
+      });
+
+      if (!record) {
+        throw new NotFoundException();
       }
+
+      /// 2. Set email confirmed to true
+      result = await this.usersService.updateUserRecordById(record.id, {
+        emailConfirmed: true,
+      });
     } catch (err) {
-      Logger.debug(
-        `[AuthService] Could not find record for given email, ${err}`,
+      throw new NotFoundException();
+    }
+
+    /// 3. Return updated user?
+    return result;
+  }
+
+  /** Create a new user
+   *
+   * @param credentials Username and password of new user
+   * @returns Newly created user record
+   */
+  async createUser(credentials: CreateUserDto): Promise<User> {
+    const { username, password } = credentials;
+    const emailToken: string = randomBytes(16).toString('hex'); /// Generate 8bytes of random chars
+    const smsToken = randomInt(100000, 1000000); /// Generate 6-digit SMS verification code
+    
+    /// This will store our new user element, we need this to attach the ID to the subscriptionRecord
+    let userRecordResult: User;
+
+    /// 1. Generate salt and hash user password
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // 2. Create new user record
+    const newRecord: User = this.usersRepo.create({
+      username,
+      emailToken,
+      smsToken,
+      password: hashedPassword,
+    });
+
+    /// 3. Save new user to DB
+    try {
+      userRecordResult = await this.usersRepo.save(newRecord);
+    } catch (err) {
+      if (err.code === '23505') {
+        // duplicate username error code
+        throw new ConflictException('Username already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+
+    if (userRecordResult) {
+      /// 4. Create new subscription record for user
+      const newSubRecord = this.userSubscriptionsRepo.create();
+      const newSubRecordResult = await this.userSubscriptionsRepo.save(
+        newSubRecord,
       );
+
+      /// 5. Assign subscriptionId and save back to DB
+      Object.assign(userRecordResult, {
+        subscriptionId: newSubRecordResult.id,
+      });
+      try {
+        userRecordResult = await this.usersRepo.save(userRecordResult);
+      } catch (err) {
+        Logger.error(`Could not save user with subscription ID`, err);
+      }
+
+      /// 6. Capture user signup
+      await this.captureUserSignupRecord({
+        userId: userRecordResult.id,
+        platform: credentials.platform,
+      });
     }
+
+    // TODO: return "confirm email" message response
+    // TODO: Fire 'sendConfirmEmailMessage' workflow
+
+    /// 7. Return result
+    return userRecordResult;
   }
 
-  /**
-   * Sign in with email/password credentials
+  /** Sign in as an existing user
    *
-   * @param email user email as string{}
-   * @param password user password as string{}
-   *
-   * @returns authorization token as string{}
+   * @param credentials Username and password of exisiting user
+   * @returns Authorization token as { accessToken: string}
    */
-  async signIn(email: string, password: string): Promise<string> {
-    /// 1. Fetch the user with the passed email address
-    const user: User = await this.repo.findOne({
-      where: {email}
-    })
+  async signIn(credentials: UserSigninDto): Promise<{ accessToken: string }> {
+    const { username, password, platform } = credentials;
 
-    /// 2. If user exists, check if password is correct
+    // let user: User;
+    let accessToken: string;
+
+    /// 1. Fetch the user with the given username
+    const user = await this.usersRepo.findOne({ where: { username } });
+
+    /// 2. Ensure user exists and password is correct
     if (user && (await bcrypt.compare(password, user.password))) {
-      /// 3. Return access token
-      const payload: IJwtPayload = { email };
-      const accessToken: string = await this.jwtService.sign(payload);
-      return accessToken;
+      /// 3. Sign payload using username
+      const payload: IJwtPayload = { username };
+      accessToken = this.jwtService.sign(payload);
     } else {
-      throw new UnauthorizedException('Please check login credentials')
+      throw new UnauthorizedException('Please check login credentials'); // Throws a 401 error
     }
+
+    /// 4. Check if email address has been verified
+    if (!user.emailConfirmed) {
+      throw new ForbiddenException('Email address has not been confirmed'); // Throws a 403 error
+    }
+
+    /// 5. Capture user login
+    await this.captureUserLoginRecord({ userId: user.id, platform });
+
+    /// 6. Return access token
+    return { accessToken };
   }
 
-  /**
-   * Sign in with Google credentials
+  /** Check if a username already exists in the DB
+   * 
+   * @param username Username to search for in the DB
+   * @returns True if the username already exists, else false
    */
-  async signInWithGoogle() {
-    // TODO: Add sign in with Google logic
-  }
+  async checkIfUserExists(username: string): Promise<boolean> {
+    try {
+      await this.usersService.findOneByUsername(username);
 
-  /**
-   * Sign in with Apple credentials
-   */
-  async signInWithApple() {
-    // TODO: Add sign in with Apple logic
+      //* If no exception is thrown, it means a matching record was found. 
+      //* No further processing required.
+        return true;
+    } catch (err) {
+      //* In this case, an exception means no record was found.
+    }
+    return false;
   }
 }

@@ -1,79 +1,114 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from 'src/common/entities/book.entity';
-import { BookDetailsDto } from 'src/common/entities/dto/book-details.dto';
+import { BookDetailsDto } from 'src/api/books/dto/book-details.dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class BooksService {
   @InjectRepository(Book)
-  private readonly repo: Repository<Book>;
+  private readonly booksRepo: Repository<Book>;
+
+  /**
+   * Retrieve all books 
+   * 
+   * @returns array of [Book]
+   */
+  async findAllBooks(): Promise<Book[]> {
+    let results: Book[] = [];
+    try {
+      results = await this.booksRepo.find();
+    } catch (err) {
+      Logger.debug('[BooksService] Could not retrieve list of books', err);
+    }
+    return results;
+  }
 
   /**
    * Retrieve all books for User
+   * 
    * @param userId id of current user
    * @returns array of [Book]
    */
-  async findAllBooks(userId: number): Promise<Book[]> {
+  async findAllUserBooks(userId: number): Promise<Book[]> {
     let results: Book[] = [];
     try {
-      Logger.debug(`[BooksService] Retrieving list of books ...`);
-      results = await this.repo.findBy({ id: userId });
+      results = await this.booksRepo.findBy({ id: userId });
     } catch (err) {
-      Logger.debug(`[BooksService] Could not retrieve list of books: ${err}`);
+      Logger.debug('[BooksService] Could not retrieve list of books', err);
     }
     return results;
   }
 
   /**
    * Find book by ID
+   * 
    * @param id id of desired book
    * @returns book with passed id
    */
-  async findBookById(id: number): Promise<Book> {
+  async findOneById(id: number): Promise<Book> {
     let result;
     try {
-      Logger.debug(`[BooksService] Retrieving book with id ${id}`);
-      result = await this.repo.findOneBy({ id });
+      result = await this.booksRepo.findOneBy({ id });
     } catch (err) {
-      Logger.debug(`[BooksService] Could not retrieve book with id ${id}`);
+      Logger.debug(`[BooksService] Could not retrieve book with id ${id}`, err);
     }
     return result;
   }
 
-  /**
-   * Delete a book from the db
+  /** Delete a book from the db
+   * 
    * @param id ID of book entry to delete
    */
-  async deleteBookById(id: number): Promise<void> {
-    // TODO: Add delete book logic
-    /// 1. Check if book with passed ID  exists in db, if not return 404
-    /// 2. Delete book from db using passed ID
+  async deleteBookById(id: number): Promise<Book> {
+    let result: Book;
+
+    const record: Book = await this.findOneById(id);
+
+    try {
+      result = await this.booksRepo.remove(record);
+    } catch (err) {
+      Logger.error(`Could not remove remove with id ${id}`, err);
+    }
+
+    if (!result) {
+      throw new InternalServerErrorException(`Error removing book with ID ${id}`);
+    }
+
+    return result;
   }
 
-  /**
-   * Update a single book by ID
+  /** Update a single book by ID
+   * 
    * @param id ID of book entry to update
    * @param details new book details to write to db
    */
-  async updateBook(id: number, details: BookDetailsDto): Promise<Book> {
-    // TODO: Add logic to update a book entry
+  async updateBookById(id: number, newData: Partial<Book>): Promise<Book> {
+    let result: Book;
 
-    /// 1. Check if book with passed ID exists in db, if not return 404
+    const record: Book = await this.findOneById(id);
 
-    /// 2. Write [updatedBook] object to db
+    Object.assign(record, newData);
 
-    /// 3. Return updated book entry
+    try {
+      result = await this.booksRepo.save(record);
+    } catch (err) {
+      Logger.error(`Could not update record with Id ${id}`, err);
+    }
 
-    return new Book();
+    if (!result) {
+      throw new InternalServerErrorException(`Could not update record with Id ${id}`);
+    }
+
+    return result;
   }
 
-  /**
-   * Add a new book to db
+  /** Add a new book to db
+   * 
    * @param userId ID of user that is adding book to db
    * @param details new book details to write to db
    */
-  async addBook(userId: number, details: BookDetailsDto): Promise<Book> {
+  async createBook(userId: number, details: BookDetailsDto): Promise<Book> {
     // TODO: Add logic to create a book entry
 
     /// 1. Check for pre-existing entry using userID and book details
