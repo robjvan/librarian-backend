@@ -15,6 +15,8 @@ import { UserModule } from './api/users/users.module';
 import { BooksModule } from './api/books/books.module';
 import { configValidationSchema } from './common/envs/config.schema';
 import { InsightsModule } from './api/insights/insights.module';
+import { ReportingModule } from './admin/reporting/reporting.module';
+import { AdminModule } from './admin/admin.module';
 
 // const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
@@ -32,6 +34,8 @@ import { InsightsModule } from './api/insights/insights.module';
     UserModule,
     BooksModule,
     InsightsModule,
+    AdminModule, 
+    ReportingModule,
   ],
   controllers: [],
   providers: [],
