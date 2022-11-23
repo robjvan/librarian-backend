@@ -2,6 +2,7 @@
 ### Add new book to DB
 POST http://localhost:3000/api/v1/books
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhZEBkYWQuY29tIiwiaWF0IjoxNjY5MTcwNjcwLCJleHAiOjE2NjkxNzQyNzB9.COwV8xKTYi6-vdDj0yKPw15roIG21eJSZOuyZDcuUzs
 
 {
   "title": "",
@@ -10,10 +11,10 @@ Content-Type: application/json
   "authorId": 1,
   "publisherId": 1,
   "publishYear": 2004,
-  "userId": 1
+  "userId": 11
 }
 
-### Get all books
+### Get all books for User
 GET http://localhost:3000/api/v1/books
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhZEBkYWQuY29tIiwiaWF0IjoxNjY5MTcwNjcwLCJleHAiOjE2NjkxNzQyNzB9.COwV8xKTYi6-vdDj0yKPw15roIG21eJSZOuyZDcuUzs
 
