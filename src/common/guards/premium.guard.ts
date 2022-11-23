@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext, Inject } from '@nestjs/common';
-import { UserSubscriptionService } from 'src/api/users/user-subscriotion.service';
+import { UserSubscriptionService } from 'src/api/users/user-subscription.service';
 
 @Injectable()
 export class PremiumGuard implements CanActivate {

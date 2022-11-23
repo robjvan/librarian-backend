@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from 'src/common/entities/user.entity';
-import { UserSubscriptionService } from './user-subscriotion.service';
+import { UserSubscriptionService } from './user-subscription.service';
 import { UsersService } from './users.service';
 
 @Controller('api/v1/user')

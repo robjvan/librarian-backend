@@ -6,7 +6,7 @@ import { DemographicInfo } from 'src/common/entities/demographic-info.entity';
 import { UserLoginRecord } from 'src/common/entities/user-login-record.entity';
 import { UserSubscription } from 'src/common/entities/user-subscription.entity';
 import { User } from 'src/common/entities/user.entity';
-import { UserSubscriptionService } from './user-subscriotion.service';
+import { UserSubscriptionService } from './user-subscription.service';
 import { UserController } from './users.controller';
 import { UsersService } from './users.service';
 

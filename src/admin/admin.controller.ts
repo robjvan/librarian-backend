@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BooksService } from 'src/api/books/books.service';
-import { UserSubscriptionService } from 'src/api/users/user-subscriotion.service';
+import { UserSubscriptionService } from 'src/api/users/user-subscription.service';
 import { UsersService } from 'src/api/users/users.service';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { AdminService } from './admin.service';
