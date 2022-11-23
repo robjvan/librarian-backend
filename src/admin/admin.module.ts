@@ -1,73 +1,32 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { BooksService } from 'src/api/books/books.service';
 import { UserSubscriptionService } from 'src/api/users/user-subscriotion.service';
 import { UsersService } from 'src/api/users/users.service';
-import { AdminGuard } from 'src/common/guards/admin.guard';
+import { Book } from 'src/common/entities/book.entity';
+import { UserCountry } from 'src/common/entities/country.entity';
+import { DemographicInfo } from 'src/common/entities/demographic-info.entity';
+import { UserLoginRecord } from 'src/common/entities/user-login-record.entity';
+import { UserSubscription } from 'src/common/entities/user-subscription.entity';
+import { User } from 'src/common/entities/user.entity';
+import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 
-@Controller('admin')
-@UseGuards(AuthGuard(), new AdminGuard())
-export class AdminController {
-  constructor(
-    private adminService: AdminService,
-    private userSubscriptionsService: UserSubscriptionService,
-    private booksService: BooksService,
-    private usersService: UsersService,
-  ) {}
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      Book,
+      User,
+      UserSubscription,
+      UserCountry,
+      UserLoginRecord,
+      DemographicInfo,
+    ]),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+  ],
 
-  /// Fetch all recipes
-  @Get('/books')
-  findAllRecipes() {
-    return this.booksService.findAllBooks();
-  }
-
-  /// Fetch all users
-  @Get('/users')
-  findAllUsers() {
-    return this.usersService.findAllUsers();
-  }
-
-  // Fetch all subscriptions
-  @Get('/subscriptions')
-  findAllSubs() {
-    return this.userSubscriptionsService.findAll();
-  }
-
-  /// Delete User by ID
-  @Delete('/users/:id')
-  getUserByUsername(@Param('id') id: number) {
-    return this.usersService.deleteUserById(id);
-  }
-
-  /// Delete User by username
-  @Delete('/users/username')
-  deleteUserById(@Body() username: string) {
-    return this.usersService.deleteUserByUsername(username);
-  }
-
-  /// Clear tables
-  @Delete('/cleartables')
-  clearTables() {
-    return this.adminService.clearTables();
-  }
-
-  // Get subscription information for user
-  @Get('/:id/subscription')
-  fetchSubscriptionDetails(@Param('id') userId: number) {
-    return this.userSubscriptionsService.findOneByUserId(userId);
-  }
-
-  // Get user by ID
-  @Get('/:id')
-  findOneById(@Param('id') id: number) {
-    return this.usersService.findOneById(id);
-  }
-}
+  controllers: [AdminController],
+  providers: [UsersService, UserSubscriptionService, BooksService, AdminService],
+})
+export class AdminModule {}
