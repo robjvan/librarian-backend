@@ -15,7 +15,7 @@ export class InsightsService {
    * @param userId Id of user to count books for
    * @returns Number of books that currently exist in DB for the given userId
    */
-   async countAllRecipes(userId: number): Promise<number> {
+   async countAllBooks(userId: number): Promise<number> {
     let booksCount = 0;
 
     try {

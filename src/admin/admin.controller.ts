@@ -23,9 +23,9 @@ export class AdminController {
     private usersService: UsersService,
   ) {}
 
-  /// Fetch all recipes
+  /// Fetch all books
   @Get('/books')
-  findAllRecipes() {
+  findAllBooks() {
     return this.booksService.findAllBooks();
   }
 

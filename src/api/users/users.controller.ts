@@ -46,7 +46,7 @@ export class UserController {
   closeUserAccount(@GetUser() user: User) {
     //* This is a sticky one.
     //* Ideally, we want to scramble any personal data while retaining useful information
-    //* Such as user recipes, anonymous demographics, etc.
+    //* such as user books, anonymous demographics, etc.
     // return this.usersService.deleteUserAccountById(id);
   }
 }
