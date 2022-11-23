@@ -1,21 +1,16 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../../common/entities/user.entity';
-import { UserType } from 'src/common/entities/enum/user-type.enum';
-// import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-// import { UserSubscription } from '../../common/entities/user-subscription.entity';
-// import { UserCountry } from 'src/common/entities/country.entity';
-// import { DemographicInfo } from 'src/common/entities/demographic-info.entity';
-// import { UserLoginRecord } from 'src/common/entities/user-login-record.entity';
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { UserType } from "src/common/entities/enum/user-type.enum";
+import { User } from "src/common/entities/user.entity";
+import { Repository } from "typeorm";
+
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepo: Repository<User>,
-  ) // @InjectRepository(UserCountry)
-  // private userCountriesRepo: Repository<UserCountry>,
+    private usersRepo: Repository<User>, // @InjectRepository(UserCountry)
+  ) // private userCountriesRepo: Repository<UserCountry>,
   // @InjectRepository(DemographicInfo)
   // private userDemographicsRepo: Repository<DemographicInfo>,
   // @InjectRepository(UserLoginRecord)
