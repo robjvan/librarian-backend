@@ -132,7 +132,12 @@ export class BooksService {
     return result;
   }
 
-  //
+  /** Check DB for Description value    
+   * Check DB for passed title and retrieve ID, or create new entry if not found
+   * 
+   * @param value Description blurb of book
+   * @returns ID of description record if found
+   */
   async processDescription(value: string): Promise<number> {
     const descriptionRecord: Description = await this.descriptionsRepo.findOne({
       where: { value },
@@ -156,6 +161,12 @@ export class BooksService {
     }
   }
 
+  /** Check DB for Author value  
+   * Check DB for passed title and retrieve ID, or create new entry if not found
+   * 
+   * @param name Author name for the book
+   * @returns ID of the author record if found
+   */
   async processAuthor(name: string): Promise<number> {
     const authorRecord: Author = await this.authorsRepo.findOne({
       where: { name },
@@ -177,6 +188,12 @@ export class BooksService {
     }
   }
 
+  /** Check DB for Title value  
+   * Check DB for passed title and retrieve ID, or create new entry if not found
+   * 
+   * @param value Title value for the book
+   * @returns ID of the title record if found
+   */
   async processTitle(value: string): Promise<number> {
     const titleRecord: Title = await this.titlesRepo.findOneBy({
       value,
@@ -198,6 +215,12 @@ export class BooksService {
     }
   }
 
+  /** Check DB for Publisher value 
+   * Check DB for passed publisher and retrieve ID, or create new entry if not found
+   * 
+   * @param name Publisher name for the book
+   * @returns ID of the publisher record if found
+   */
   async processPublisher(name: string): Promise<number> {
     const publisherRecord: Publisher = await this.publishersRepo.findOne({
       where: { name },
@@ -219,6 +242,12 @@ export class BooksService {
     }
   }
 
+  /** Check DB for PublishYear value  
+   * Check DB for passed publishYear and retrieve ID, or create new entry if not found
+   * 
+   * @param value Publish Year for the book
+   * @returns ID of the publishYear record if found
+   */
   async processPublishYear(value: number): Promise<number> {
     const publishYearRecord: PublishYear =
       await this.publishYearsRepo.findOneBy({
@@ -242,7 +271,13 @@ export class BooksService {
       }
     }
   }
-
+  
+  /**Check DB for ISBN10 value
+   * Check DB for passed ISBN10 and retrieve ID, or create new entry if not found
+   * 
+   * @param value Isbn10 for the book
+   * @returns ID of the ISBN10 record if found
+   */
   async processIsbn10(value: number): Promise<number> {
     const isbn10Record: Isbn10 = await this.isbn10sRepo.findOneBy({
       value,
@@ -263,7 +298,13 @@ export class BooksService {
       }
     }
   }
-
+  
+  /**Check DB for ISBN13 value
+   * Check DB for passed ISBN13 and retrieve ID, or create new entry if not found
+   * 
+   * @param value Isbn13 for the book
+   * @returns ID of the ISBN13 record if found
+   */
   async processIsbn13(value: number): Promise<number> {
     const isbn13Record: Isbn13 = await this.isbn13sRepo.findOneBy({
       value,
@@ -284,6 +325,13 @@ export class BooksService {
       }
     }
   }
+  
+  /**Check DB for ThumbnailUrl value
+   * Check DB for passed ThumbnailUrl and retrieve ID, or create new entry if not found
+   * 
+   * @param value ThumbnailUrl for the book
+   * @returns ID of the ThumbnailUrl record if found
+   */
 
   async processThumbnailUrl(value: string): Promise<number> {
     const thumbnailUrlRecord: ThumbnailUrl =
