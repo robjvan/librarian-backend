@@ -9,7 +9,7 @@ export class PublishYear {
   id: number;
 
   @Column()
-  year: number;
+  value: number;
   
   /// Hooks
   @AfterInsert()

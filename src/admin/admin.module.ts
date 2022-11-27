@@ -7,11 +7,19 @@ import { UsersService } from 'src/api/users/users.service';
 import { Book } from 'src/common/entities/book.entity';
 import { UserCountry } from 'src/common/entities/country.entity';
 import { DemographicInfo } from 'src/common/entities/demographic-info.entity';
+import { Title } from 'src/common/entities/title.entity';
 import { UserLoginRecord } from 'src/common/entities/user-login-record.entity';
 import { UserSubscription } from 'src/common/entities/user-subscription.entity';
 import { User } from 'src/common/entities/user.entity';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
+import { Author } from 'src/common/entities/author.entity';
+import { Description } from 'src/common/entities/description.entity';
+import { Publisher } from 'src/common/entities/publisher.entity';
+import { PublishYear } from 'src/common/entities/publish-year.entity';
+import { Isbn10 } from 'src/common/entities/isbn10.entity';
+import { Isbn13 } from 'src/common/entities/isbn13.entity';
+import { ThumbnailUrl } from 'src/common/entities/thuimbnail-url.entity';
 
 @Module({
   imports: [
@@ -22,6 +30,14 @@ import { AdminService } from './admin.service';
       UserCountry,
       UserLoginRecord,
       DemographicInfo,
+      Title,
+      Author,
+      Description,
+      Publisher,
+      PublishYear,
+      Isbn10,
+      Isbn13,
+      ThumbnailUrl,
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],

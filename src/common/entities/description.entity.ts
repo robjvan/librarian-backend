@@ -1,18 +1,14 @@
-import { IsString, Length } from "class-validator";
 import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { Book } from "./book.entity";
 
 @Entity()
-export class List {
+export class Description {
   @PrimaryGeneratedColumn()
+  // @OneToMany(() => Book, (book) => book.authorId)
   id: number;
 
   @Column()
-  name: string;
-
-  @Column()
-  // @OneToMany(() => User, (user) => user.id)
-  userId: number;
+  value: string;
   
   /// Hooks
   @AfterInsert()

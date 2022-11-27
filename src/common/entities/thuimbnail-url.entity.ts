@@ -1,8 +1,7 @@
-import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Book } from "./book.entity";
+import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Title {
+export class ThumbnailUrl {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -10,14 +10,14 @@ import {
 @Entity()
 export class Book {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   // @ManyToOne(() => Title, (title) => title.id)
-  title: string;
+  titleId: number;
 
   @Column({ nullable: true })
-  description: string;
+  descriptionId: number;
 
   @Column({ nullable: true })
   pageCount: number;
@@ -51,10 +51,10 @@ export class Book {
   inShoppingList: boolean;
 
   @Column({ nullable: true })
-  isbn10: number;
+  isbn10Id: number;
 
   @Column({ nullable: true })
-  isbn13: number;
+  isbn13Id: number;
 
   @Column({ default: false })
   isMature: boolean;
@@ -69,7 +69,7 @@ export class Book {
   sortAuthor: string;
 
   @Column({ nullable: true })
-  thumbnailUrl: string;
+  thumbnailUrlId: number;
 
   /// Hooks
   @AfterInsert()
