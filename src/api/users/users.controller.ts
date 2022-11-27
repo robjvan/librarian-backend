@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Body, Logger } from "@nestjs/common";
+import { Controller, Get, Patch, Body, Logger, HttpCode, Post } from "@nestjs/common";
 import { GetUser } from "src/common/decorators/get-user.decorator";
 import { User } from "src/common/entities/user.entity";
 import { UserSubscriptionService } from "./user-subscription.service";
@@ -10,6 +10,8 @@ export class UserController {
     private subscriptionService: UserSubscriptionService,
     private readonly usersService: UsersService,
   ) {}
+
+  //* Used for API actions pertaining to the current user
 
   // Get current user data
   @Get('')
@@ -43,12 +45,12 @@ export class UserController {
   }
 
   // Close user account
-  @Patch('/terminate')
+  @Post('/terminate')
+  @HttpCode(204)
   closeUserAccount(@GetUser() user: User) {
     Logger.debug(user);
     //* This is a sticky one.
     //* Ideally, we want to scramble any personal data while retaining useful information
     //* such as user books, anonymous demographics, etc.
-    // return this.usersService.deleteUserAccountById(id);
   }
 }
