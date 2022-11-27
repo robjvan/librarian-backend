@@ -1,4 +1,3 @@
-import { IsString, Length } from "class-validator";
 import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "./book.entity";
 
@@ -9,13 +8,9 @@ export class Author {
   id: number;
 
   @Column()
-  @IsString()
-  @Length(3,32)
   name: string;
 
   @Column()
-  @IsString()
-  @Length(3,32)
   sortName: string;
   
   /// Hooks

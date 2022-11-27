@@ -9,8 +9,6 @@ export class Publisher {
   id: number;
 
   @Column()
-  @IsString()
-  @Length(3,32)
   name: string;
   
   /// Hooks

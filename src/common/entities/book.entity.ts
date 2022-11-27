@@ -1,12 +1,11 @@
-import { IsNumber, IsString } from "class-validator";
-import { title } from "process";
-import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Author } from "./author.entity";
-import { List } from "./list.entity";
-import { PublishYear } from "./publish-year.entity";
-import { Publisher } from "./publisher.entity";
-import { Title } from "./title.entity";
-import { User } from "./user.entity";
+import {
+  AfterInsert,
+  AfterRemove,
+  AfterUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Book {
@@ -17,28 +16,61 @@ export class Book {
   // @ManyToOne(() => Title, (title) => title.id)
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   pageCount: number;
 
-  @Column()
-  // @ManyToOne(() => Author, (author) => author.id) 
+  @Column({ nullable: true })
+  // @ManyToOne(() => Author, (author) => author.id)
   authorId: number;
 
-  @Column()
-  // @ManyToOne(() => Publisher, (publisher) => publisher.id) 
+  @Column({ nullable: true })
+  // @ManyToOne(() => Publisher, (publisher) => publisher.id)
   publisherId: number;
 
-  @Column()
+  @Column({ nullable: true })
   // @ManyToOne(() => PublishYear, (publishYear) => publishYear.id)
-  publishYear: number;
-  
+  publishYearId: number;
+
   @Column()
   // @ManyToOne(() => User, (user) => user.id)
   userId: number;
-  
+
+  @Column({ default: false })
+  haveRead: boolean;
+
+  @Column({ default: false })
+  inWishlist: boolean;
+
+  @Column({ default: false })
+  inFavesList: boolean;
+
+  @Column({ default: false })
+  inShoppingList: boolean;
+
+  @Column({ nullable: true })
+  isbn10: number;
+
+  @Column({ nullable: true })
+  isbn13: number;
+
+  @Column({ default: false })
+  isMature: boolean;
+
+  @Column({ default: 0 })
+  rating: number;
+
+  @Column({ nullable: true })
+  sortTitle: string;
+
+  @Column({ nullable: true })
+  sortAuthor: string;
+
+  @Column({ nullable: true })
+  thumbnailUrl: string;
+
   /// Hooks
   @AfterInsert()
   afterInsert() {

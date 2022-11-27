@@ -8,13 +8,9 @@ export class ListEntry {
   id: number;
 
   @Column()
-  @IsString()
-  @Length(3, 32)
   title: string;
 
   @Column()
-  @IsString()
-  @Length(3, 32)
   userId: number;
   
   

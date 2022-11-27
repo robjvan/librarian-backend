@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from 'src/common/entities/book.entity';
-import { BookDetailsDto } from 'src/api/books/dto/book-details.dto';
+import { NewBookDto } from 'src/api/books/dto/new-book.dto';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 

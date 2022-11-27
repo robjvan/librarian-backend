@@ -8,7 +8,6 @@ export class Title {
   id: number;
 
   @Column()
-  @IsString()
   // @OneToMany(() => Book, (book) => book.title)
   title: string;
   

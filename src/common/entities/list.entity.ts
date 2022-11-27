@@ -1,5 +1,5 @@
 import { IsString, Length } from "class-validator";
-import { AfterInsert, AfterRemove, AfterUpdate, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
@@ -7,10 +7,10 @@ export class List {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @IsString()
-  @Length(3, 32)
+  @Column()
   name: string;
 
+  @Column()
   @OneToMany(() => User, (user) => user.id)
   userId: number;
   

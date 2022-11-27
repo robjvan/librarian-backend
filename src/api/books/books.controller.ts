@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
-import { BookDetailsDto } from 'src/api/books/dto/book-details.dto';
+import { NewBookDto } from 'src/api/books/dto/new-book.dto';
 import { User } from 'src/common/entities/user.entity';
 import { BooksService } from './books.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,7 +27,7 @@ export class BooksController {
   }
 
   @Patch('/:id')
-  updateBookDetails(@Param('id') id: number, details: BookDetailsDto) {
+  updateBookDetails(@Param('id') id: number, details: NewBookDto) {
     return this.booksService.updateBookById(id, details);
   }
 

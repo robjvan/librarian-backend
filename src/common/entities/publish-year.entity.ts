@@ -5,11 +5,10 @@ import { Book } from "./book.entity";
 @Entity()
 export class PublishYear {
   @PrimaryGeneratedColumn()
+  // @OneToMany(() => Book, (book) => book.publishYearId)
   id: number;
 
   @Column()
-  @Length(4)
-  @OneToMany(() => Book, (book) => book.publishYear)
   year: number;
   
   /// Hooks
