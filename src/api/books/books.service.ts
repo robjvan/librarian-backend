@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from 'src/common/entities/book.entity';
 import { BookDetailsDto } from 'src/api/books/dto/book-details.dto';
 import { Repository } from 'typeorm';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -108,7 +109,9 @@ export class BooksService {
    * @param userId ID of user that is adding book to db
    * @param details new book details to write to db
    */
-  async createBook(userId: number, details: BookDetailsDto): Promise<Book> {
+  async createBook(userId: number, details: CreateBookDto): Promise<Book> {
+    Logger.debug('BooksService.createBook fired OK')
+    Logger.warn(`Book title = ${details.title}`);
     // TODO: Add logic to create a book entry
 
     /// 1. Check for pre-existing entry using userID and book details
