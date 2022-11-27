@@ -1,9 +1,10 @@
-import { Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { BookDetailsDto } from 'src/api/books/dto/book-details.dto';
 import { User } from 'src/common/entities/user.entity';
 import { BooksService } from './books.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Controller('api/v1/books')
 @UseGuards(AuthGuard('jwt'))
@@ -21,7 +22,7 @@ export class BooksController {
   }
 
   @Post('')
-  addBook(@GetUser() user: User, details: BookDetailsDto) {
+  addBook(@GetUser() user: User, @Body() details: CreateBookDto) {
     return this.booksService.createBook(user.id, details);
   }
 
