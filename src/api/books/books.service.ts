@@ -1,7 +1,18 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Author } from 'src/common/entities/author.entity';
 import { Book } from 'src/common/entities/book.entity';
-import { NewBookDto } from 'src/api/books/dto/new-book.dto';
+import { Description } from 'src/common/entities/description.entity';
+import { Isbn10 } from 'src/common/entities/isbn10.entity';
+import { Isbn13 } from 'src/common/entities/isbn13.entity';
+import { PublishYear } from 'src/common/entities/publish-year.entity';
+import { Publisher } from 'src/common/entities/publisher.entity';
+import { ThumbnailUrl } from 'src/common/entities/thuimbnail-url.entity';
+import { Title } from 'src/common/entities/title.entity';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 
@@ -9,10 +20,25 @@ import { CreateBookDto } from './dto/create-book.dto';
 export class BooksService {
   @InjectRepository(Book)
   private readonly booksRepo: Repository<Book>;
+  @InjectRepository(Title)
+  private readonly titlesRepo: Repository<Title>;
+  @InjectRepository(Author)
+  private readonly authorsRepo: Repository<Author>;
+  @InjectRepository(Description)
+  private readonly descriptionsRepo: Repository<Description>;
+  @InjectRepository(Publisher)
+  private readonly publishersRepo: Repository<Publisher>;
+  @InjectRepository(PublishYear)
+  private readonly publishYearsRepo: Repository<PublishYear>;
+  @InjectRepository(Isbn10)
+  private readonly isbn10sRepo: Repository<Isbn10>;
+  @InjectRepository(Isbn13)
+  private readonly isbn13sRepo: Repository<Isbn13>;
+  @InjectRepository(ThumbnailUrl)
+  private readonly thumbnailUrlsRepo: Repository<ThumbnailUrl>;
 
-  /**
-   * Retrieve all books 
-   * 
+  /** Retrieve all books
+   *
    * @returns array of [Book]
    */
   async findAllBooks(): Promise<Book[]> {
@@ -25,9 +51,8 @@ export class BooksService {
     return results;
   }
 
-  /**
-   * Retrieve all books for User
-   * 
+  /** Retrieve all books for User
+   *
    * @param userId id of current user
    * @returns array of [Book]
    */
@@ -41,9 +66,8 @@ export class BooksService {
     return results;
   }
 
-  /**
-   * Find book by ID
-   * 
+  /** Find book by ID
+   *
    * @param id id of desired book
    * @returns book with passed id
    */
@@ -58,7 +82,7 @@ export class BooksService {
   }
 
   /** Delete a book from the db
-   * 
+   *
    * @param id ID of book entry to delete
    */
   async deleteBookById(id: number): Promise<Book> {
@@ -73,14 +97,16 @@ export class BooksService {
     }
 
     if (!result) {
-      throw new InternalServerErrorException(`Error removing book with ID ${id}`);
+      throw new InternalServerErrorException(
+        `Error removing book with ID ${id}`,
+      );
     }
 
     return result;
   }
 
   /** Update a single book by ID
-   * 
+   *
    * @param id ID of book entry to update
    * @param details new book details to write to db
    */
@@ -98,34 +124,240 @@ export class BooksService {
     }
 
     if (!result) {
-      throw new InternalServerErrorException(`Could not update record with Id ${id}`);
+      throw new InternalServerErrorException(
+        `Could not update record with Id ${id}`,
+      );
     }
 
     return result;
   }
 
+  //
+  async processDescription(value: string): Promise<number> {
+    const descriptionRecord: Description = await this.descriptionsRepo.findOne({
+      where: { value },
+    });
+    if (descriptionRecord) {
+      return descriptionRecord.id;
+    } else {
+      // create new record in Description table and use that ID
+      const newDescription: Description = this.descriptionsRepo.create({
+        value,
+      });
+      try {
+        const descriptionResult = await this.descriptionsRepo.save(
+          newDescription,
+        );
+        return descriptionResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new description to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  async processAuthor(name: string): Promise<number> {
+    const authorRecord: Author = await this.authorsRepo.findOne({
+      where: { name },
+    });
+    if (authorRecord) {
+      return authorRecord.id;
+    } else {
+      // create new record in Author table and use that ID
+      const newAuthor: Author = this.authorsRepo.create({
+        name,
+      });
+      try {
+        const authorResult = await this.authorsRepo.save(newAuthor);
+        return authorResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new author to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  async processTitle(value: string): Promise<number> {
+    const titleRecord: Title = await this.titlesRepo.findOneBy({
+      value,
+    });
+    if (titleRecord) {
+      return titleRecord.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newTitle: Title = this.titlesRepo.create({
+        value,
+      });
+      try {
+        const titleResult = await this.titlesRepo.save(newTitle);
+        return titleResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new title to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  async processPublisher(name: string): Promise<number> {
+    const publisherRecord: Publisher = await this.publishersRepo.findOne({
+      where: { name },
+    });
+    if (publisherRecord) {
+      return publisherRecord.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newPublisher: Publisher = this.publishersRepo.create({
+        name,
+      });
+      try {
+        const publisherResult = await this.publishersRepo.save(newPublisher);
+        return publisherResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new Publisher to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  async processPublishYear(value: number): Promise<number> {
+    const publishYearRecord: PublishYear =
+      await this.publishYearsRepo.findOneBy({
+        value,
+      });
+    if (publishYearRecord) {
+      return publishYearRecord.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newPublishYear: Isbn10 = this.publishYearsRepo.create({
+        value,
+      });
+      try {
+        const publishYearResult = await this.publishYearsRepo.save(
+          newPublishYear,
+        );
+        return publishYearResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new PublishYear to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  async processIsbn10(value: number): Promise<number> {
+    const isbn10Record: Isbn10 = await this.isbn10sRepo.findOneBy({
+      value,
+    });
+    if (isbn10Record) {
+      return isbn10Record.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newIsbn10: Isbn10 = this.isbn10sRepo.create({
+        value,
+      });
+      try {
+        const isbn10Result = await this.isbn10sRepo.save(newIsbn10);
+        return isbn10Result.id;
+      } catch (err) {
+        Logger.error(`Could not save new ISBN10 to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  async processIsbn13(value: number): Promise<number> {
+    const isbn13Record: Isbn13 = await this.isbn13sRepo.findOneBy({
+      value,
+    });
+    if (isbn13Record) {
+      return isbn13Record.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newIsbn13: Isbn13 = this.isbn13sRepo.create({
+        value,
+      });
+      try {
+        const isbn13Result = await this.isbn13sRepo.save(newIsbn13);
+        return isbn13Result.id;
+      } catch (err) {
+        Logger.error(`Could not save new ISBN13 to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  async processThumbnailUrl(value: string): Promise<number> {
+    const thumbnailUrlRecord: ThumbnailUrl =
+      await this.thumbnailUrlsRepo.findOneBy({
+        value,
+      });
+    if (thumbnailUrlRecord) {
+      return thumbnailUrlRecord.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newThumbnailUrlRecord: ThumbnailUrl = this.thumbnailUrlsRepo.create(
+        {
+          value,
+        },
+      );
+      try {
+        const thumbnailUrlResult = await this.thumbnailUrlsRepo.save(
+          newThumbnailUrlRecord,
+        );
+        return thumbnailUrlResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new ThumbnailUrl to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
   /** Add a new book to db
-   * 
+   *
    * @param userId ID of user that is adding book to db
    * @param details new book details to write to db
    */
   async createBook(userId: number, details: CreateBookDto): Promise<Book> {
-    Logger.debug('BooksService.createBook fired OK')
-    Logger.warn(`Book title = ${details.title}`);
-    // TODO: Add logic to create a book entry
-
-    /// 1. Check for pre-existing entry using userID and book details
-
-    /// 2. Check if author/publisher/title/publish-year exist in DB
-    ///   2a. If not exists, add it and retrieve ID
-    ///   2b. If exists, retrieve ID
+    /// 1. Check each field for existing entry in DB
+    const titleId = await this.processTitle(details.title);
+    const authorId = await this.processAuthor(details.author);
+    const descriptionId = await this.processDescription(details.description);
+    const publisherId = await this.processPublisher(details.publisher);
+    const publishYearId = await this.processPublishYear(details.publishYear);
+    const isbn10Id = await this.processIsbn10(details.isbn10);
+    const isbn13Id = await this.processIsbn13(details.isbn13);
+    const thumbnailUrlId = await this.processThumbnailUrl(details.thumbnailUrl);
 
     /// 3. Assign data to [newBook] object
-
+    const newBook: Book = this.booksRepo.create({
+      userId: userId,
+      titleId: titleId,
+      authorId: authorId,
+      descriptionId: descriptionId,
+      publisherId: publisherId,
+      publishYearId: publishYearId,
+      isbn10Id: isbn10Id,
+      isbn13Id: isbn13Id,
+      thumbnailUrlId: thumbnailUrlId,
+      isMature: details.isMature,
+      inFavesList: details.inFavesList,
+      inShoppingList: details.inShoppingList,
+      inWishlist: details.inWishlist,
+      haveRead: details.haveRead,
+      pageCount: details.pageCount,
+    });
     /// 4. Save new entry to db
+    let result: Book;
+    try {
+      result = await this.booksRepo.save(newBook);
+    } catch (err) {
+      Logger.error(`Could not save new book to database`, err);
+    }
+
+    if (!result) {
+      throw new InternalServerErrorException();
+    }
 
     /// 5. Return created book entry
-
-    return new Book();
+    return result;
   }
 }
