@@ -53,20 +53,14 @@ export class AdminController {
     return this.usersService.deleteUserByUsername(username);
   }
 
-  /// Clear tables
-  @Delete('/cleartables')
-  clearTables() {
-    return this.adminService.clearTables();
-  }
-
   // Get subscription information for user
-  @Get('/:id/subscription')
+  @Get('/users/:id/subscription')
   fetchSubscriptionDetails(@Param('id') userId: number) {
     return this.userSubscriptionsService.findOneByUserId(userId);
   }
 
   // Get user by ID
-  @Get('/:id')
+  @Get('/users/:id')
   findOneById(@Param('id') id: number) {
     return this.usersService.findOneById(id);
   }
