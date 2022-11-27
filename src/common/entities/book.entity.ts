@@ -21,7 +21,7 @@ export class Book {
   description: string;
 
   @Column()
-  pages: number;
+  pageCount: number;
 
   @Column()
   // @ManyToOne(() => Author, (author) => author.id) 
