@@ -7,7 +7,6 @@ import { RouteInfo } from '@nestjs/common/interfaces';
 // import * as rateLimit from 'express-rate-limit';
 // import { UserService } from './api/user/user.service';
 import { AuthModule } from './auth/auth.module';
-// import { getEnvPath } from './common/helpers/env.helper';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm/dist';
 import { TypeOrmConfigService } from './common/services/typeorm.service';
@@ -17,24 +16,32 @@ import { configValidationSchema } from './common/envs/config.schema';
 import { InsightsModule } from './api/insights/insights.module';
 import { ReportingModule } from './admin/reporting/reporting.module';
 import { AdminModule } from './admin/admin.module';
+import { getEnvPath } from './common/envs/env.helper';
+import * as dotenv from 'dotenv';
+import { TypeOrmProdConfigService } from './common/services/typeorm.prod.service';
+dotenv.config();
 
-// const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
+const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      // envFilePath: `src/common/envs/${envFilePath}`,
-      envFilePath: `src/common/envs/development.env`,
+      envFilePath: `${envFilePath}`,
       validationSchema: configValidationSchema,
       isGlobal: true,
       load: [],
     }),
-    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+    TypeOrmModule.forRootAsync({
+      useClass:
+        process.env.NODE_ENV !== 'production'
+          ? TypeOrmConfigService
+          : TypeOrmProdConfigService,
+    }),
     AuthModule,
     UserModule,
     BooksModule,
     InsightsModule,
-    AdminModule, 
+    AdminModule,
     ReportingModule,
   ],
   controllers: [],

@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm/dist';
 
 @Injectable()
-export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+export class TypeOrmProdConfigService implements TypeOrmOptionsFactory {
   @Inject(ConfigService)
   private readonly config: ConfigService;
 
@@ -21,7 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrations: [__dirname + '/../**/*.migration.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
       logger: 'file',
-      synchronize: true, //! TODO: NEVER use true in production!!!
+      synchronize: false, //! TODO: NEVER use true in production!!!
       
     };
   }
