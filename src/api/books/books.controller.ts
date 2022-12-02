@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from 'src/common/entities/user.entity';
 import { BooksService } from './books.service';
@@ -11,8 +11,8 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get('')
-  getAllBooks(@GetUser() user: User) {
-    return this.booksService.findAllUserBooks(user.id);
+  async getAllBooks(@GetUser() user: User) {
+    return await this.booksService.findAllUserBooks(user.id);
   }
 
   @Get('/:id')
