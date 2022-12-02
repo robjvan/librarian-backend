@@ -11,17 +11,26 @@ import { Isbn10 } from 'src/common/entities/isbn10.entity';
 import { Isbn13 } from 'src/common/entities/isbn13.entity';
 import { PublishYear } from 'src/common/entities/publish-year.entity';
 import { Publisher } from 'src/common/entities/publisher.entity';
-import { ThumbnailUrl } from 'src/common/entities/thuimbnail-url.entity';
+import { SortAuthor } from 'src/common/entities/sort-author.entity';
+import { SortTitle } from 'src/common/entities/sort-title.entity';
+import { ThumbnailUrl } from 'src/common/entities/thumbnail-url.entity';
 import { Title } from 'src/common/entities/title.entity';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
+import { FlutterBookDto } from './dto/flutter-book.dto';
 
 @Injectable()
 export class BooksService {
+  private readonly logger = new Logger(BooksService.name);
+
   @InjectRepository(Book)
   private readonly booksRepo: Repository<Book>;
   @InjectRepository(Title)
   private readonly titlesRepo: Repository<Title>;
+  @InjectRepository(SortAuthor)
+  private readonly sortAuthorsRepo: Repository<SortAuthor>;
+  @InjectRepository(SortTitle)
+  private readonly sortTitlesRepo: Repository<SortTitle>;
   @InjectRepository(Author)
   private readonly authorsRepo: Repository<Author>;
   @InjectRepository(Description)
@@ -59,9 +68,16 @@ export class BooksService {
   async findAllUserBooks(userId: number): Promise<Book[]> {
     let results: Book[] = [];
     try {
-      results = await this.booksRepo.findBy({ id: userId });
+      results = await this.booksRepo.findBy({ userId });
+      // results.forEach(async (element) => {
+      //   const newBook: FlutterBookDto = await this.convertToFlutterBook(
+      //     element,
+      //   );
+      //   processedResults.push(newBook);
+      // });
     } catch (err) {
       Logger.debug('[BooksService] Could not retrieve list of books', err);
+      // return [];
     }
     return results;
   }
@@ -132,9 +148,9 @@ export class BooksService {
     return result;
   }
 
-  /** Check DB for Description value    
+  /** Check DB for Description value
    * Check DB for passed title and retrieve ID, or create new entry if not found
-   * 
+   *
    * @param value Description blurb of book
    * @returns ID of description record if found
    */
@@ -161,9 +177,9 @@ export class BooksService {
     }
   }
 
-  /** Check DB for Author value  
+  /** Check DB for Author value
    * Check DB for passed title and retrieve ID, or create new entry if not found
-   * 
+   *
    * @param name Author name for the book
    * @returns ID of the author record if found
    */
@@ -188,9 +204,9 @@ export class BooksService {
     }
   }
 
-  /** Check DB for Title value  
+  /** Check DB for Title value
    * Check DB for passed title and retrieve ID, or create new entry if not found
-   * 
+   *
    * @param value Title value for the book
    * @returns ID of the title record if found
    */
@@ -215,9 +231,9 @@ export class BooksService {
     }
   }
 
-  /** Check DB for Publisher value 
+  /** Check DB for Publisher value
    * Check DB for passed publisher and retrieve ID, or create new entry if not found
-   * 
+   *
    * @param name Publisher name for the book
    * @returns ID of the publisher record if found
    */
@@ -242,9 +258,9 @@ export class BooksService {
     }
   }
 
-  /** Check DB for PublishYear value  
+  /** Check DB for PublishYear value
    * Check DB for passed publishYear and retrieve ID, or create new entry if not found
-   * 
+   *
    * @param value Publish Year for the book
    * @returns ID of the publishYear record if found
    */
@@ -271,10 +287,10 @@ export class BooksService {
       }
     }
   }
-  
+
   /**Check DB for ISBN10 value
    * Check DB for passed ISBN10 and retrieve ID, or create new entry if not found
-   * 
+   *
    * @param value Isbn10 for the book
    * @returns ID of the ISBN10 record if found
    */
@@ -298,10 +314,10 @@ export class BooksService {
       }
     }
   }
-  
+
   /**Check DB for ISBN13 value
    * Check DB for passed ISBN13 and retrieve ID, or create new entry if not found
-   * 
+   *
    * @param value Isbn13 for the book
    * @returns ID of the ISBN13 record if found
    */
@@ -325,14 +341,108 @@ export class BooksService {
       }
     }
   }
-  
-  /**Check DB for ThumbnailUrl value
-   * Check DB for passed ThumbnailUrl and retrieve ID, or create new entry if not found
-   * 
+
+  /**Check DB for sortAuthor value
+   * Check DB for passed sortAuthor and retrieve ID, or create new entry if not found
+   *
    * @param value ThumbnailUrl for the book
    * @returns ID of the ThumbnailUrl record if found
    */
+  async processSortAuthor(name: string): Promise<number> {
+    /// FIRST. convert author name into "sortable" name by swapping first and last name
+    const splitName: string[] = name.split(' ');
+    let sortableName = '';
 
+    switch (splitName.length) {
+      case 1:
+        sortableName = `${splitName[0]}`;
+        break;
+      case 2:
+        sortableName = `${splitName[1]}, ${splitName[0]}`;
+        break;
+      case 3:
+        sortableName = `${splitName[2]}, ${splitName[0]} ${splitName[1]}`;
+        break;
+      case 4:
+        sortableName = `${splitName[3]}, ${splitName[0]} ${splitName[1]} ${splitName[2]}`;
+        break;
+    }
+
+    const sortAuthorRecord: SortAuthor = await this.sortAuthorsRepo.findOneBy({
+      name: sortableName,
+    });
+    if (sortAuthorRecord) {
+      return sortAuthorRecord.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newSortAuthorRecord: SortAuthor = this.sortAuthorsRepo.create({
+        name,
+      });
+      try {
+        const newSortAuthorResult = await this.thumbnailUrlsRepo.save(
+          newSortAuthorRecord,
+        );
+        return newSortAuthorResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new SortAuthor to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  /**Check DB for sortTitle value
+   * Check DB for passed sortTitle and retrieve ID, or create new entry if not found
+   *
+   * @param value ThumbnailUrl for the book
+   * @returns ID of the ThumbnailUrl record if found
+   */
+  async processSortTitle(name: string): Promise<number> {
+    const splitName: string[] = name.split(' ');
+    let sortableName = '';
+
+    switch (splitName.length) {
+      case 1:
+        sortableName = `${splitName[0]}`;
+        break;
+      case 2:
+        sortableName = `${splitName[1]}, ${splitName[0]}`;
+        break;
+      case 3:
+        sortableName = `${splitName[2]}, ${splitName[0]} ${splitName[1]}`;
+        break;
+      case 4:
+        sortableName = `${splitName[3]}, ${splitName[0]} ${splitName[1]} ${splitName[2]}`;
+        break;
+    }
+
+    const sortTitleRecord: SortTitle = await this.sortTitlesRepo.findOneBy({
+      name: sortableName,
+    });
+    if (sortTitleRecord) {
+      return sortTitleRecord.id;
+    } else {
+      // create new record in Title table and use that ID
+      const newSortTitleRecord: SortTitle = this.sortTitlesRepo.create({
+        name,
+      });
+      try {
+        const newSortTitleResult = await this.sortTitlesRepo.save(
+          newSortTitleRecord,
+        );
+        return newSortTitleResult.id;
+      } catch (err) {
+        Logger.error(`Could not save new SortTitle to DB`, err);
+        return undefined;
+      }
+    }
+  }
+
+  /**Check DB for ThumbnailUrl value
+   * Check DB for passed ThumbnailUrl and retrieve ID, or create new entry if not found
+   *
+   * @param value ThumbnailUrl for the book
+   * @returns ID of the ThumbnailUrl record if found
+   */
   async processThumbnailUrl(value: string): Promise<number> {
     const thumbnailUrlRecord: ThumbnailUrl =
       await this.thumbnailUrlsRepo.findOneBy({
@@ -374,18 +484,22 @@ export class BooksService {
     const isbn10Id = await this.processIsbn10(details.isbn10);
     const isbn13Id = await this.processIsbn13(details.isbn13);
     const thumbnailUrlId = await this.processThumbnailUrl(details.thumbnailUrl);
+    const sortAuthorId = await this.processSortAuthor(details.author);
+    const sortTitleId = await this.processSortTitle(details.title);
 
     /// 3. Assign data to [newBook] object
     const newBook: Book = this.booksRepo.create({
-      userId: userId,
-      titleId: titleId,
-      authorId: authorId,
-      descriptionId: descriptionId,
-      publisherId: publisherId,
-      publishYearId: publishYearId,
-      isbn10Id: isbn10Id,
-      isbn13Id: isbn13Id,
-      thumbnailUrlId: thumbnailUrlId,
+      userId,
+      titleId,
+      authorId,
+      descriptionId,
+      publisherId,
+      publishYearId,
+      isbn10Id,
+      isbn13Id,
+      thumbnailUrlId,
+      sortAuthorId,
+      sortTitleId,
       isMature: details.isMature,
       inFavesList: details.inFavesList,
       inShoppingList: details.inShoppingList,
