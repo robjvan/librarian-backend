@@ -5,7 +5,7 @@ export class ThumbnailUrl {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   value: string;
   
   /// Hooks
