@@ -1,8 +1,11 @@
+import { Logger } from "@nestjs/common";
 import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "./book.entity";
 
 @Entity()
 export class Author {
+  private readonly logger: Logger = new Logger(Author.name);
+
   @PrimaryGeneratedColumn()
   // @OneToMany(() => Book, (book) => book.authorId)
   id: number;
@@ -13,16 +16,16 @@ export class Author {
   /// Hooks
   @AfterInsert()
   afterInsert() {
-    // TODO: Add logging messages
+    this.logger.debug(`Author ${this.name} successfully added to DB - ID #${this.id}`);
   }
 
   @AfterRemove()
   afterRemove() {
-    // TODO: Add logging messages
+    this.logger.debug(`Author ${this.name} successfully removed from DB`);
   }
 
   @AfterUpdate()
   afterUpdate() {
-    // TODO: Add logging messages
+    this.logger.debug(`Author ${this.name} successfully updated`);
   }
 }
