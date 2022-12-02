@@ -63,10 +63,10 @@ export class Book {
   rating: number;
 
   @Column({ nullable: true })
-  sortTitle: string;
+  sortTitleId: number;
 
   @Column({ nullable: true })
-  sortAuthor: string;
+  sortAuthorId: number;
 
   @Column({ nullable: true })
   thumbnailUrlId: number;
