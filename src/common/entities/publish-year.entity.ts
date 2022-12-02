@@ -8,7 +8,7 @@ export class PublishYear {
   // @OneToMany(() => Book, (book) => book.publishYearId)
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   value: number;
   
   /// Hooks

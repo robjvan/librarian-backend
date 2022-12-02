@@ -3,10 +3,10 @@ import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGenerated
 @Entity()
 export class SortTitle {
   @PrimaryGeneratedColumn()
-  id:number;
+  id: number;
 
-  @Column()
-  value: string;
+  @Column({nullable: true})
+  name: string;
   
   /// Hooks
   @AfterInsert()

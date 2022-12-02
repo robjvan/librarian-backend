@@ -1,12 +1,11 @@
 import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Book } from "./book.entity";
 
 @Entity()
 export class SortAuthor {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   name: string;
   
   /// Hooks

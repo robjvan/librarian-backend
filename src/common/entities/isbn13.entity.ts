@@ -3,9 +3,9 @@ import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGenerated
 @Entity()
 export class Isbn13 {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
-  @Column()
+  @Column({nullable: true})
   value: number;
   
   /// Hooks
